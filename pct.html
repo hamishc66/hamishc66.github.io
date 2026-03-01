@@ -1,0 +1,1037 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>PCT — Hamish Cairns</title>
+
+  <!-- Favicon: Star of Life in SAR Orange -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23FF6700'%3E%3Crect x='38' y='5' width='24' height='90' rx='5'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(60 50 50)'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(120 50 50)'/%3E%3Ccircle cx='50' cy='50' r='14'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome 6 Free -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES — Theme Tokens
+    ============================================================ */
+    :root {
+      --bg-primary:    #0f1a0f;
+      --bg-secondary:  #162316;
+      --bg-card:       #1a2e1a;
+      --bg-nav:        rgba(15, 26, 15, 0.92);
+      --accent:        #FF6700;
+      --accent-dim:    rgba(255, 103, 0, 0.18);
+      --text-primary:  #e8ede8;
+      --text-secondary:#9aac9a;
+      --text-muted:    #607060;
+      --border:        rgba(154, 172, 154, 0.15);
+      --topo-opacity:  0.04;
+    }
+    [data-theme="light"] {
+      --bg-primary:    #f4f2ed;
+      --bg-secondary:  #eceae3;
+      --bg-card:       #ffffff;
+      --bg-nav:        rgba(244, 242, 237, 0.95);
+      --accent:        #FF6700;
+      --accent-dim:    rgba(255, 103, 0, 0.10);
+      --text-primary:  #1a2010;
+      --text-secondary:#3a4a3a;
+      --text-muted:    #7a8a7a;
+      --border:        rgba(26, 32, 16, 0.12);
+      --topo-opacity:  0.06;
+    }
+
+    /* ============================================================
+       BASE RESET & BODY
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-secondary);
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Topo SVG watermark */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cg fill='none' stroke='%239aac9a' stroke-width='1'%3E%3Cellipse cx='400' cy='400' rx='60' ry='40'/%3E%3Cellipse cx='400' cy='400' rx='110' ry='75'/%3E%3Cellipse cx='400' cy='400' rx='160' ry='115'/%3E%3Cellipse cx='400' cy='400' rx='215' ry='158'/%3E%3Cellipse cx='400' cy='400' rx='275' ry='205'/%3E%3Cellipse cx='400' cy='400' rx='340' ry='255'/%3E%3Cellipse cx='200' cy='200' rx='50' ry='35'/%3E%3Cellipse cx='200' cy='200' rx='90' ry='65'/%3E%3Cellipse cx='200' cy='200' rx='135' ry='98'/%3E%3Cellipse cx='600' cy='600' rx='55' ry='38'/%3E%3Cellipse cx='600' cy='600' rx='100' ry='72'/%3E%3Cellipse cx='600' cy='600' rx='150' ry='108'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 800px 800px;
+      opacity: var(--topo-opacity);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main, nav, footer, section, header { position: relative; z-index: 1; }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #main-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: var(--bg-nav);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .nav-brand {
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .nav-link:hover { color: var(--accent); background: var(--accent-dim); }
+    .nav-link.active { color: var(--accent); }
+
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 34px; height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+    #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    #hamburger {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 34px; height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    #mobile-drawer {
+      position: fixed;
+      top: 56px; right: 0;
+      width: 240px;
+      background: var(--bg-card);
+      border-left: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transform: translateX(100%);
+      transition: transform 0.28s ease;
+    }
+    #mobile-drawer.open { transform: translateX(0); }
+
+    .mobile-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.55rem 0.75rem;
+      border-radius: 4px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .mobile-link:hover { color: var(--accent); background: var(--accent-dim); }
+    .mobile-link.active { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      #hamburger { display: flex; }
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       PAGE HEADER
+    ============================================================ */
+    #page-header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 7rem 1.5rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Decorative trail SVG in header background */
+    #page-header::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 600 200' preserveAspectRatio='xMidYMid slice'%3E%3Cpath d='M0,150 C60,140 80,80 140,90 C200,100 220,160 290,130 C360,100 370,50 440,70 C510,90 540,140 600,120' fill='none' stroke='%23FF6700' stroke-width='2' opacity='0.10' stroke-linecap='round'/%3E%3Cpath d='M0,170 C80,155 110,110 170,120 C230,130 250,170 320,150 C390,130 410,70 480,85 C550,100 565,145 600,140' fill='none' stroke='%23FF6700' stroke-width='1.5' opacity='0.06' stroke-linecap='round'/%3E%3C/svg%3E");
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      pointer-events: none;
+    }
+
+    .page-header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      position: relative;
+      z-index: 1;
+    }
+
+    .doc-label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .doc-label span { color: var(--accent); }
+
+    .page-title {
+      font-size: clamp(2.8rem, 9vw, 5.5rem);
+      font-weight: 900;
+      letter-spacing: -0.03em;
+      color: var(--text-primary);
+      line-height: 1.0;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 520px;
+      letter-spacing: 0.04em;
+      font-weight: 500;
+    }
+
+    .breadcrumb-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: 'Courier New', monospace;
+      transition: opacity 0.2s ease;
+    }
+    .breadcrumb-link:hover { opacity: 0.75; }
+
+    /* ============================================================
+       MAIN CONTENT LAYOUT
+    ============================================================ */
+    .pct-main {
+      max-width: 860px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    /* ============================================================
+       TRAIL SECTION
+    ============================================================ */
+    .trail-section {
+      padding: 4rem 0 3rem;
+    }
+
+    .trail-section + .trail-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .section-num {
+      font-family: 'Courier New', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.5rem;
+    }
+
+    .section-divider {
+      width: 56px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 1.2rem;
+    }
+
+    .section-title {
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 1.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .section-title i { color: var(--accent); font-size: 0.85em; }
+
+    /* ============================================================
+       PROSE
+    ============================================================ */
+    .pct-prose p {
+      font-size: 0.95rem;
+      color: var(--text-secondary);
+      line-height: 1.85;
+      margin-bottom: 1.2rem;
+    }
+
+    .pct-prose p:last-child { margin-bottom: 0; }
+
+    .pct-prose strong {
+      color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    /* ============================================================
+       BLOCK QUOTE
+    ============================================================ */
+    .trail-quote {
+      border-left: 3px solid var(--accent);
+      padding: 1.2rem 1.5rem;
+      margin: 2.5rem 0;
+      background: var(--accent-dim);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .trail-quote p {
+      font-size: 1.15rem;
+      font-style: italic;
+      color: var(--text-primary);
+      line-height: 1.65;
+      margin: 0;
+    }
+
+    .trail-quote cite {
+      display: block;
+      margin-top: 0.6rem;
+      font-size: 0.72rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      font-style: normal;
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       TERRAIN SUBSECTIONS
+    ============================================================ */
+    .terrain-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.25rem;
+      margin-top: 1.8rem;
+    }
+
+    @media (max-width: 600px) {
+      .terrain-grid { grid-template-columns: 1fr; }
+    }
+
+    .terrain-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.2rem 1.3rem;
+    }
+
+    .terrain-card-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.4rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .terrain-card-name {
+      font-size: 0.92rem;
+      font-weight: 700;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    .terrain-card p {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       STATS BLOCK
+    ============================================================ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1rem;
+      margin-top: 1.8rem;
+    }
+
+    @media (max-width: 560px) {
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+
+    .stat-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.3rem 1.2rem;
+      text-align: center;
+    }
+
+    .stat-card.accent-border {
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+    }
+
+    .stat-value {
+      font-size: clamp(1.4rem, 3.5vw, 2rem);
+      font-weight: 900;
+      color: var(--accent);
+      letter-spacing: -0.02em;
+      line-height: 1.1;
+      font-family: 'Courier New', monospace;
+    }
+
+    .stat-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-top: 0.4rem;
+    }
+
+    /* ============================================================
+       SKILLS BUILT LIST
+    ============================================================ */
+    .built-list {
+      list-style: none;
+      margin-top: 1.8rem;
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+    }
+
+    .built-item {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 1.1rem 1.3rem 1.1rem 1.5rem;
+      position: relative;
+    }
+
+    .built-item::before {
+      content: '';
+      position: absolute;
+      left: 0; top: 0; bottom: 0;
+      width: 3px;
+      background: var(--accent);
+      border-radius: 3px 0 0 3px;
+      opacity: 0.6;
+    }
+
+    .built-item-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 0.35rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .built-item-title i {
+      color: var(--accent);
+      font-size: 0.75rem;
+    }
+
+    .built-item p {
+      font-size: 0.85rem;
+      color: var(--text-secondary);
+      line-height: 1.7;
+    }
+
+    /* ============================================================
+       DECORATIVE TRAIL LINE (between sections)
+    ============================================================ */
+    .trail-divider {
+      width: 100%;
+      height: 24px;
+      margin: 0;
+      opacity: 0.18;
+    }
+
+    /* ============================================================
+       PHOTO PLACEHOLDER
+    ============================================================ */
+    /* PHOTOS: Drop img tags here with class="pct-photo" once available */
+    .photo-placeholder {
+      background: var(--bg-card);
+      border: 1px dashed rgba(154, 172, 154, 0.3);
+      border-radius: 6px;
+      padding: 2.5rem;
+      text-align: center;
+      margin: 2rem 0;
+    }
+
+    .photo-placeholder p {
+      font-size: 0.72rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.1em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .status-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .radar-ping { position: relative; width: 22px; height: 22px; flex-shrink: 0; }
+    .radar-dot {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .radar-wave {
+      position: absolute;
+      top: 50%; left: 50%;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      animation: radar-pulse 2.4s ease-out infinite;
+    }
+    .radar-wave:nth-child(2) { animation-delay: 0.8s; }
+    .radar-wave:nth-child(3) { animation-delay: 1.6s; }
+
+    @keyframes radar-pulse {
+      0%   { width: 7px;  height: 7px;  opacity: 0.9; transform: translate(-50%, -50%) scale(0); }
+      100% { width: 44px; height: 44px; opacity: 0;   transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .status-text {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(255,103,0,0.4);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.45rem 1rem;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    .footer-btn:hover { background: rgba(255, 103, 0, 0.28); }
+
+    .footer-email {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+      transition: color 0.2s ease;
+    }
+    .footer-email:hover { color: var(--accent); }
+
+    .footer-copy  { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .footer-trail { font-size: 0.72rem; color: var(--text-muted); font-family: 'Courier New', monospace; letter-spacing: 0.06em; margin-bottom: 1.2rem; }
+
+    .footer-nav { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .footer-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+    .footer-nav a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand" aria-label="H. Cairns home">H.CAIRNS</a>
+
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Home</a>
+      <a href="about.html"       class="nav-link">About</a>
+      <a href="skills.html"      class="nav-link">Skills</a>
+      <a href="credentials.html" class="nav-link">Credentials</a>
+      <a href="pct.html"         class="nav-link active">PCT</a>
+    </div>
+
+    <button id="theme-toggle" aria-label="Toggle light/dark mode">
+      <i id="theme-icon" class="fa-solid fa-sun"></i>
+    </button>
+
+    <button id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="skills.html"      class="mobile-link">Skills</a>
+    <a href="credentials.html" class="mobile-link">Credentials</a>
+    <a href="pct.html"         class="mobile-link active">PCT</a>
+  </div>
+
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================ -->
+  <header id="page-header" aria-label="Page header">
+    <div class="page-header-inner">
+      <div class="doc-label reveal"><span>FILE:</span> FIELD_JOURNAL_PCT.DOC</div>
+      <h1 class="page-title reveal">2,650 Miles</h1>
+      <p class="page-subtitle reveal">Mexico to Canada &nbsp;·&nbsp; Pacific Crest Trail &nbsp;·&nbsp; 2031</p>
+      <a href="index.html" class="breadcrumb-link reveal">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dossier
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main>
+    <div class="pct-main">
+
+      <!-- ======================================================
+           SECTION 01: WHY
+      ====================================================== -->
+      <section class="trail-section" aria-labelledby="section-why">
+        <div class="section-num reveal">01 / WHY</div>
+        <div class="section-divider reveal"></div>
+        <h2 class="section-title reveal" id="section-why">
+          <i class="fa-solid fa-compass"></i> Why I Did It
+        </h2>
+
+        <div class="pct-prose reveal">
+          <p>
+            End of my first year at OSU, studying emergency management. I'd been reading about the backcountry — terrain, weather patterns, search and rescue operations — and at some point I noticed the gap between what I was reading and what I'd actually done. Weekend trips don't close that gap. You get uncomfortable for 48 hours and then you go home and get a burrito.
+          </p>
+          <p>
+            I wanted to find out if I could handle sustained hardship. Not "hard weekend" hard — months hard. The kind where you can't just tap out. Where the question of whether you're cut out for this gets answered whether you want it answered or not. That's a different thing than a certification exam or a class scenario.
+          </p>
+          <p>
+            There was also a practical angle. Emergency management in the West means working in terrain that runs from high desert to alpine. I wanted to understand that terrain in my body, not just on a map. The PCT covers all of it. You start at the Mexican border with 26 pounds on your back and a lot of that kind of understanding comes pretty fast.
+          </p>
+          <p>
+            April 2031. Campo, California. It was hot already.
+          </p>
+        </div>
+
+        <!-- PHOTOS: Insert image of southern terminus monument here -->
+
+      </section>
+
+      <!-- ======================================================
+           SECTION 02: THE TRAIL
+      ====================================================== -->
+      <section class="trail-section" aria-labelledby="section-trail">
+        <div class="section-num reveal">02 / THE TRAIL</div>
+        <div class="section-divider reveal"></div>
+        <h2 class="section-title reveal" id="section-trail">
+          <i class="fa-solid fa-route"></i> What It Was Actually Like
+        </h2>
+
+        <div class="pct-prose reveal">
+          <p>
+            I'm going to be straight with you: the first two weeks were rough. Southern California chaparral in April means dust, rattlesnakes, and temperatures that swing 40 degrees between 2 AM and 2 PM. I had blisters on my blisters. My pack was too heavy. I was hiking 18 miles a day instead of the 25 I'd planned. There's a specific kind of humility that hits you around mile 80 when you realize you've got 2,570 to go and your feet look like something from a medical textbook.
+          </p>
+          <p>
+            But you figure it out. You shed gear. You learn the rhythm — water sources, shade, when to push and when to set up camp early. By the time I hit the San Bernardino Mountains, something had clicked.
+          </p>
+        </div>
+
+        <div class="terrain-grid reveal">
+          <div class="terrain-card">
+            <div class="terrain-card-label">Segment 01</div>
+            <div class="terrain-card-name">The Desert — Southern California</div>
+            <p>More brutal than anyone tells you. Endless miles of chaparral and sand, no shade, water every 20+ miles sometimes. The learning curve is steep and the desert doesn't care. You either adapt your pace and your head, or you quit. A lot of people quit here.</p>
+          </div>
+
+          <div class="terrain-card">
+            <div class="terrain-card-label">Segment 02</div>
+            <div class="terrain-card-name">The Sierra Nevada</div>
+            <p>The most technically demanding stretch. I hit the High Sierra in late May — still plenty of snow on the passes. Icy approaches at dawn, route-finding with the trail buried under three feet of white, post-holing through cornices. This is where the navigation skills got real. No shortcuts up here.</p>
+          </div>
+
+          <div class="terrain-card">
+            <div class="terrain-card-label">Segment 03</div>
+            <div class="terrain-card-name">Oregon</div>
+            <p>Volcanic terrain, crater lakes, old-growth forest. Physically, Oregon is the recovery section — flatter, faster miles. Mentally, it's a trap. After the Sierra, you let your guard down. The miles blur together. You cruise on autopilot and suddenly it's September and you're crossing into Washington.</p>
+          </div>
+
+          <div class="terrain-card">
+            <div class="terrain-card-label">Segment 04</div>
+            <div class="terrain-card-name">Washington — The North Cascades</div>
+            <p>Relentless rain. Mud. Everything soaked all the time. The Cascades are genuinely beautiful — volcanic peaks, old-growth hemlock, the Pacific mist — but you're grinding through it on a body that's been walking for five months. The last week felt almost anticlimactic. You're just running on routine by then.</p>
+          </div>
+        </div>
+
+        <!-- PHOTOS: Insert trail photos — desert, Sierra snow, Cascades rain here -->
+
+        <div class="pct-prose reveal" style="margin-top: 2rem;">
+          <p>
+            <strong>Trail culture</strong> is its own thing. You get a trail name — mine was "Cairns," which was the obvious call for someone named Cairns, and also because I kept building little rock cairns at confusing junctions. People start knowing you by that name. You share a camp with someone for one night and you know their real deal by morning — there's not much pretense when everyone's dirty and tired and eating ramen.
+          </p>
+          <p>
+            Trail magic is real. Strangers leaving coolers of cold Cokes at road crossings. A guy in Idyllwild who turned his backyard into an unofficial hostel every summer, no charge. Random acts of generosity from people who have nothing to gain from it. That stuff lands differently when you're exhausted and it's hot and you've been going on willpower for a week.
+          </p>
+          <p>
+            <strong>The hard parts no one posts about:</strong> Loneliness in the desert, especially the first few hundred miles before the hiker community consolidates. Days when the miles don't add up and you're setting up your tent in the dark, again, in the rain, eating cold food because your fuel ran out. Heat exhaustion around mile 300 — I stopped too late in the day and paid for it. The trail tests your decision-making every single day, often when you're the most tired and the most hungry, which is exactly when your judgment is the worst.
+          </p>
+        </div>
+
+        <div class="trail-quote reveal">
+          <p>"The trail doesn't care about your resume. It cares if you can walk tomorrow."</p>
+          <cite>— somewhere around mile 1,400, northern California</cite>
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SECTION 03: WHAT IT BUILT
+      ====================================================== -->
+      <section class="trail-section" aria-labelledby="section-built">
+        <div class="section-num reveal">03 / WHAT IT BUILT</div>
+        <div class="section-divider reveal"></div>
+        <h2 class="section-title reveal" id="section-built">
+          <i class="fa-solid fa-layer-group"></i> What It Actually Built
+        </h2>
+
+        <div class="pct-prose reveal">
+          <p>
+            I want to be clear about what I'm not claiming: hiking a long trail doesn't make you a paramedic. It doesn't replace clinical training or incident command coursework. What it does is build the substrate that the technical skills sit on. And that substrate is hard to fake.
+          </p>
+        </div>
+
+        <ul class="built-list">
+          <li class="built-item reveal">
+            <div class="built-item-title">
+              <i class="fa-solid fa-brain"></i> Decision-Making Under Fatigue
+            </div>
+            <p>On trail, the most important decisions happen when you're exhausted, hungry, and out of water. Do you push another 4 miles to the next reliable source or camp dry? Do you attempt that snow pass in the afternoon when it's softening, or bivouac and go at dawn? Those aren't abstract calls. Emergency work asks the exact same thing of you — best judgment under the worst conditions. Six months of that is a decent training ground.</p>
+          </li>
+
+          <li class="built-item reveal">
+            <div class="built-item-title">
+              <i class="fa-solid fa-person-falling-burst"></i> Self-Rescue Mentality
+            </div>
+            <p>Nobody's coming. That's the baseline assumption in the Sierra, especially early-season, especially off the main corridor. You take a bad fall, you twist an ankle on a snow crossing — you figure it out with what you have. That mindset shift — away from "call for help" toward "what do I have and what do I do with it right now" — is the foundation of wilderness medicine. It's also just cleaner thinking under stress.</p>
+          </li>
+
+          <li class="built-item reveal">
+            <div class="built-item-title">
+              <i class="fa-solid fa-map"></i> Navigation Without a Signal
+            </div>
+            <p>Six months of reading terrain, crosschecking paper maps with GPS, noting water sources, tracking weather, identifying landmarks at a distance. There's no cell service across most of the Sierra and half of Washington. You get very comfortable very fast with map-and-compass as the primary system, technology as the backup. That hierarchy matters in the field.</p>
+          </li>
+
+          <li class="built-item reveal">
+            <div class="built-item-title">
+              <i class="fa-solid fa-person-circle-check"></i> Reading People
+            </div>
+            <p>You spend enough time in the hiking community and you learn to tell the difference between someone who says they're fine and someone who actually is. The vibe, the eyes, how they're moving — you pick up on it fast because the stakes are real. Someone bonking from heat exhaustion looks different than someone who's just tired. That read transfers directly to field triage and patient assessment.</p>
+          </li>
+
+          <li class="built-item reveal">
+            <div class="built-item-title">
+              <i class="fa-solid fa-fire"></i> Comfort With Discomfort
+            </div>
+            <p>This one's harder to quantify but it might be the most valuable thing. I'm genuinely comfortable being wet, cold, hungry, and tired for extended periods — not because I enjoy it, but because I know it ends, I know how to manage it, and I know it doesn't impair my ability to function if I don't let it. That's something no cert program gives you. It has to be earned.</p>
+          </li>
+
+          <li class="built-item reveal">
+            <div class="built-item-title">
+              <i class="fa-solid fa-clock"></i> Patience and Stubbornness
+            </div>
+            <p>Twenty-five miles a day for months isn't complicated. One foot in front of the other, every day, no days off. That builds a specific kind of patient stubbornness that's really hard to fake in an interview but pretty obvious when something goes sideways in the field. You either have the gear to grind, or you don't. Trail sorts that out pretty efficiently.</p>
+          </li>
+        </ul>
+
+        <!-- PHOTOS: Insert summit/campsite photos here -->
+
+      </section>
+
+      <!-- ======================================================
+           SECTION 04: THE NUMBERS
+      ====================================================== -->
+      <section class="trail-section" aria-labelledby="section-numbers">
+        <div class="section-num reveal">04 / THE NUMBERS</div>
+        <div class="section-divider reveal"></div>
+        <h2 class="section-title reveal" id="section-numbers">
+          <i class="fa-solid fa-chart-line"></i> The Numbers
+        </h2>
+
+        <div class="stats-grid">
+          <div class="stat-card accent-border reveal">
+            <div class="stat-value">2,650</div>
+            <div class="stat-label">Miles Total</div>
+          </div>
+
+          <div class="stat-card reveal">
+            <div class="stat-value">~6</div>
+            <div class="stat-label">Months on Trail</div>
+          </div>
+
+          <div class="stat-card reveal">
+            <div class="stat-value">3</div>
+            <div class="stat-label">States</div>
+          </div>
+
+          <div class="stat-card reveal">
+            <div class="stat-value">14,505</div>
+            <div class="stat-label">Highest Point (ft) — Mt. Whitney</div>
+          </div>
+
+          <div class="stat-card reveal">
+            <div class="stat-value">~2,500</div>
+            <div class="stat-label">Lowest Point (ft) — near Tehachapi</div>
+          </div>
+
+          <div class="stat-card accent-border reveal">
+            <div class="stat-value">~500k</div>
+            <div class="stat-label">Feet Elevation Gain</div>
+          </div>
+        </div>
+
+        <div class="pct-prose reveal" style="margin-top: 2rem;">
+          <p>
+            April to October 2031. California, Oregon, Washington. Finished at the northern terminus on the Canadian border at Manning Park. Trail name: Cairns. That one was never in question.
+          </p>
+        </div>
+
+        <!-- PHOTOS: Insert northern terminus / Manning Park finish photo here -->
+
+      </section>
+
+    </div><!-- /.pct-main -->
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <div class="status-wrap">
+        <div class="radar-ping" aria-hidden="true">
+          <div class="radar-dot"></div>
+          <div class="radar-wave"></div>
+          <div class="radar-wave"></div>
+          <div class="radar-wave"></div>
+        </div>
+        <span class="status-text">Status: Field Ready</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-btn">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="mailto:inquiries@hamishcairns.com" class="footer-email">
+          inquiries@hamishcairns.com
+        </a>
+      </div>
+
+      <p class="footer-copy">&copy; 2038 H. Cairns</p>
+      <p class="footer-trail">2,650 mi &nbsp;&#183;&nbsp; Campo to Manning Park &nbsp;&#183;&nbsp; PCT</p>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="credentials.html">Credentials</a>
+        <a href="pct.html">PCT</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ----------------------------------------------------------
+       THEME TOGGLE
+    ---------------------------------------------------------- */
+    (function () {
+      var html = document.documentElement;
+      var btn  = document.getElementById('theme-toggle');
+      var icon = document.getElementById('theme-icon');
+
+      btn.addEventListener('click', function () {
+        var isDark = html.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          html.setAttribute('data-theme', 'light');
+          icon.className = 'fa-solid fa-moon';
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          icon.className = 'fa-solid fa-sun';
+        }
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       HAMBURGER MENU
+    ---------------------------------------------------------- */
+    (function () {
+      var btn    = document.getElementById('hamburger');
+      var drawer = document.getElementById('mobile-drawer');
+      var links  = drawer.querySelectorAll('.mobile-link');
+
+      btn.addEventListener('click', function () {
+        var isOpen = drawer.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      links.forEach(function (link) {
+        link.addEventListener('click', function () {
+          drawer.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       SCROLL-REVEAL (Intersection Observer)
+    ---------------------------------------------------------- */
+    (function () {
+      var els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('visible'); });
+        return;
+      }
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.10 });
+      els.forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+</body>
+</html>
