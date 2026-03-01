@@ -1,0 +1,1144 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Skills — Hamish Cairns</title>
+
+  <!-- Favicon: Star of Life in SAR Orange -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23FF6700'%3E%3Crect x='38' y='5' width='24' height='90' rx='5'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(60 50 50)'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(120 50 50)'/%3E%3Ccircle cx='50' cy='50' r='14'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"><\/script>
+
+  <!-- FontAwesome 6 Free -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES — Theme Tokens
+    ============================================================ */
+    :root {
+      --bg-primary:    #0f1a0f;
+      --bg-secondary:  #162316;
+      --bg-card:       #1a2e1a;
+      --bg-nav:        rgba(15, 26, 15, 0.92);
+      --accent:        #FF6700;
+      --accent-dim:    rgba(255, 103, 0, 0.18);
+      --text-primary:  #e8ede8;
+      --text-secondary:#9aac9a;
+      --text-muted:    #607060;
+      --border:        rgba(154, 172, 154, 0.15);
+      --topo-opacity:  0.04;
+    }
+    [data-theme="light"] {
+      --bg-primary:    #f4f2ed;
+      --bg-secondary:  #eceae3;
+      --bg-card:       #ffffff;
+      --bg-nav:        rgba(244, 242, 237, 0.95);
+      --accent:        #FF6700;
+      --accent-dim:    rgba(255, 103, 0, 0.10);
+      --text-primary:  #1a2010;
+      --text-secondary:#3a4a3a;
+      --text-muted:    #7a8a7a;
+      --border:        rgba(26, 32, 16, 0.12);
+      --topo-opacity:  0.06;
+    }
+
+    /* ============================================================
+       BASE RESET & BODY
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-secondary);
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      overflow-x: hidden;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Topo SVG watermark */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cg fill='none' stroke='%239aac9a' stroke-width='1'%3E%3Cellipse cx='400' cy='400' rx='60' ry='40'/%3E%3Cellipse cx='400' cy='400' rx='110' ry='75'/%3E%3Cellipse cx='400' cy='400' rx='160' ry='115'/%3E%3Cellipse cx='400' cy='400' rx='215' ry='158'/%3E%3Cellipse cx='400' cy='400' rx='275' ry='205'/%3E%3Cellipse cx='400' cy='400' rx='340' ry='255'/%3E%3Cellipse cx='200' cy='200' rx='50' ry='35'/%3E%3Cellipse cx='200' cy='200' rx='90' ry='65'/%3E%3Cellipse cx='200' cy='200' rx='135' ry='98'/%3E%3Cellipse cx='600' cy='600' rx='55' ry='38'/%3E%3Cellipse cx='600' cy='600' rx='100' ry='72'/%3E%3Cellipse cx='600' cy='600' rx='150' ry='108'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 800px 800px;
+      opacity: var(--topo-opacity);
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    main, nav, footer, section, header { position: relative; z-index: 1; }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #main-nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 56px;
+      background: var(--bg-nav);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
+      border-bottom: 1px solid var(--border);
+      z-index: 1000;
+      display: flex;
+      align-items: center;
+      padding: 0 1.5rem;
+      gap: 1.5rem;
+    }
+
+    .nav-brand {
+      font-weight: 900;
+      font-size: 1.05rem;
+      letter-spacing: 0.12em;
+      color: var(--accent);
+      text-decoration: none;
+      flex-shrink: 0;
+    }
+
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 0.2rem;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+
+    .nav-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 600;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .nav-link:hover { color: var(--accent); background: var(--accent-dim); }
+    .nav-link.active { color: var(--accent); }
+
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 34px; height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      flex-shrink: 0;
+    }
+    #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
+    #hamburger {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 34px; height: 34px;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
+    }
+
+    #mobile-drawer {
+      position: fixed;
+      top: 56px; right: 0;
+      width: 240px;
+      background: var(--bg-card);
+      border-left: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1rem;
+      z-index: 999;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      transform: translateX(100%);
+      transition: transform 0.28s ease;
+    }
+    #mobile-drawer.open { transform: translateX(0); }
+
+    .mobile-link {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 600;
+      letter-spacing: 0.07em;
+      text-transform: uppercase;
+      padding: 0.55rem 0.75rem;
+      border-radius: 4px;
+      transition: color 0.2s ease, background 0.2s ease;
+    }
+    .mobile-link:hover { color: var(--accent); background: var(--accent-dim); }
+    .mobile-link.active { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      #hamburger { display: flex; }
+    }
+
+    /* ============================================================
+       SCROLL REVEAL
+    ============================================================ */
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
+
+    /* ============================================================
+       SECTION LABEL
+    ============================================================ */
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-label::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    /* ============================================================
+       TAG PILLS
+    ============================================================ */
+    .tag-pill {
+      border: 1px solid rgba(255, 103, 0, 0.4);
+      color: var(--accent);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      display: inline-block;
+      margin: 0.2rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    /* ============================================================
+       FILE-OPEN BUTTON
+    ============================================================ */
+    .file-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: 'Courier New', monospace;
+      border: 1px solid rgba(255, 103, 0, 0.35);
+      padding: 0.45rem 0.9rem;
+      border-radius: 3px;
+      background: var(--accent-dim);
+      transition: background 0.2s ease, border-color 0.2s ease;
+      margin-top: 1.2rem;
+    }
+    .file-btn:hover { background: rgba(255, 103, 0, 0.28); border-color: var(--accent); }
+
+    /* ============================================================
+       PAGE HEADER
+    ============================================================ */
+    #page-header {
+      background: var(--bg-secondary);
+      border-bottom: 1px solid var(--border);
+      padding: 7rem 1.5rem 3.5rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .page-header-inner {
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
+    .doc-label {
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 1rem;
+    }
+    .doc-label span { color: var(--accent); }
+
+    .page-title {
+      font-size: clamp(2rem, 6vw, 3.8rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      color: var(--text-primary);
+      line-height: 1.05;
+      margin-bottom: 0.75rem;
+    }
+
+    .page-subtitle {
+      font-size: 1rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
+      margin-bottom: 1.5rem;
+      max-width: 520px;
+    }
+
+    .breadcrumb-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: 'Courier New', monospace;
+      transition: opacity 0.2s ease;
+    }
+    .breadcrumb-link:hover { opacity: 0.75; }
+
+    /* ============================================================
+       SKILL SECTIONS — Document Style
+    ============================================================ */
+    .skills-main {
+      max-width: 960px;
+      margin: 0 auto;
+      padding: 0 1.5rem 5rem;
+    }
+
+    .skill-section {
+      padding: 4rem 0 3rem;
+    }
+
+    .skill-section + .skill-section {
+      border-top: 1px solid var(--border);
+    }
+
+    /* Section number */
+    .skill-num {
+      font-family: 'Courier New', monospace;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.22em;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      margin-bottom: 0.6rem;
+    }
+
+    /* Orange divider */
+    .skill-divider {
+      width: 56px;
+      height: 3px;
+      background: var(--accent);
+      border-radius: 2px;
+      margin-bottom: 1.2rem;
+    }
+
+    .skill-title {
+      font-size: clamp(1.3rem, 3vw, 1.85rem);
+      font-weight: 900;
+      color: var(--text-primary);
+      letter-spacing: -0.01em;
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.65rem;
+    }
+    .skill-title i { color: var(--accent); font-size: 0.9em; }
+
+    /* Layout: sidebar (odd sections) */
+    .skill-layout-sidebar {
+      display: grid;
+      grid-template-columns: 1fr 280px;
+      gap: 2.5rem;
+      margin-top: 1.8rem;
+      align-items: start;
+    }
+
+    /* Layout: full-width prose (even sections) */
+    .skill-layout-prose {
+      margin-top: 1.8rem;
+    }
+
+    /* Subsection */
+    .skill-sub {
+      margin-bottom: 1.6rem;
+    }
+
+    .skill-sub-title {
+      font-size: 0.82rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 0.4rem;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+    .skill-sub-title::before {
+      content: '//';
+      color: var(--accent);
+      font-family: 'Courier New', monospace;
+      font-size: 0.75rem;
+      opacity: 0.7;
+    }
+
+    .skill-sub p {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      line-height: 1.75;
+    }
+
+    /* Tags row */
+    .skill-tags { margin-top: 1.4rem; }
+
+    /* Quick-facts sidebar box */
+    .quick-facts {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 0 6px 6px 0;
+      padding: 1.2rem 1.3rem;
+      font-size: 0.78rem;
+      position: sticky;
+      top: 72px;
+    }
+
+    .quick-facts-label {
+      font-size: 0.62rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.9rem;
+      font-family: 'Courier New', monospace;
+    }
+
+    .quick-facts ul {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.55rem;
+    }
+
+    .quick-facts li {
+      color: var(--text-secondary);
+      line-height: 1.4;
+      padding-left: 1rem;
+      position: relative;
+    }
+    .quick-facts li::before {
+      content: '▸';
+      position: absolute;
+      left: 0;
+      color: var(--accent);
+      font-size: 0.6rem;
+      top: 0.1rem;
+    }
+
+    .quick-facts .qf-divider {
+      height: 1px;
+      background: var(--border);
+      margin: 0.75rem 0;
+    }
+
+    .quick-facts-mono {
+      font-family: 'Courier New', monospace;
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      line-height: 1.65;
+      margin-top: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 0.75rem;
+    }
+    .quick-facts-mono span { color: var(--accent); }
+
+    @media (max-width: 720px) {
+      .skill-layout-sidebar {
+        grid-template-columns: 1fr;
+      }
+      .quick-facts { position: static; }
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem 2rem;
+    }
+
+    .footer-inner {
+      max-width: 860px;
+      margin: 0 auto;
+      text-align: center;
+    }
+
+    .status-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
+    }
+
+    .radar-ping { position: relative; width: 22px; height: 22px; flex-shrink: 0; }
+    .radar-dot {
+      position: absolute;
+      top: 50%; left: 50%;
+      width: 7px; height: 7px;
+      background: var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%);
+    }
+    .radar-wave {
+      position: absolute;
+      top: 50%; left: 50%;
+      border: 1.5px solid var(--accent);
+      border-radius: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      animation: radar-pulse 2.4s ease-out infinite;
+    }
+    .radar-wave:nth-child(2) { animation-delay: 0.8s; }
+    .radar-wave:nth-child(3) { animation-delay: 1.6s; }
+
+    @keyframes radar-pulse {
+      0%   { width: 7px;  height: 7px;  opacity: 0.9; transform: translate(-50%, -50%) scale(0); }
+      100% { width: 44px; height: 44px; opacity: 0;   transform: translate(-50%, -50%) scale(1); }
+    }
+
+    .status-text {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+    }
+
+    .footer-links {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(255,103,0,0.4);
+      color: var(--accent);
+      font-size: 0.78rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      text-decoration: none;
+      padding: 0.45rem 1rem;
+      border-radius: 4px;
+      transition: background 0.2s ease;
+    }
+    .footer-btn:hover { background: rgba(255, 103, 0, 0.28); }
+
+    .footer-email {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+      transition: color 0.2s ease;
+    }
+    .footer-email:hover { color: var(--accent); }
+
+    .footer-copy  { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .footer-trail { font-size: 0.72rem; color: var(--text-muted); font-family: 'Courier New', monospace; letter-spacing: 0.06em; margin-bottom: 1.2rem; }
+
+    .footer-nav { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .footer-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
+    }
+    .footer-nav a:hover { color: var(--accent); }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand" aria-label="H. Cairns home">H.CAIRNS</a>
+
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link">Home</a>
+      <a href="about.html"       class="nav-link">About</a>
+      <a href="skills.html"      class="nav-link active">Skills</a>
+      <a href="credentials.html" class="nav-link">Credentials</a>
+      <a href="pct.html"         class="nav-link">PCT</a>
+    </div>
+
+    <button id="theme-toggle" aria-label="Toggle light/dark mode">
+      <i id="theme-icon" class="fa-solid fa-sun"></i>
+    </button>
+
+    <button id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+      <i class="fa-solid fa-bars"></i>
+    </button>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html"       class="mobile-link">Home</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="skills.html"      class="mobile-link active">Skills</a>
+    <a href="credentials.html" class="mobile-link">Credentials</a>
+    <a href="pct.html"         class="mobile-link">PCT</a>
+  </div>
+
+  <!-- ============================================================
+       PAGE HEADER
+  ============================================================ -->
+  <header id="page-header" aria-label="Page header">
+    <div class="page-header-inner">
+      <div class="doc-label reveal"><span>//</span> CAPABILITY_ASSESSMENT.DOC</div>
+      <h1 class="page-title reveal">Capability Breakdown</h1>
+      <p class="page-subtitle reveal">Detailed assessment of operational skill areas</p>
+      <a href="index.html" class="breadcrumb-link reveal">
+        <i class="fa-solid fa-arrow-left"></i> Back to Dossier
+      </a>
+    </div>
+  </header>
+
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main id="main-content">
+    <div class="skills-main">
+
+      <!-- ======================================================
+           SECTION 01 — GIS & Spatial Intelligence (sidebar layout)
+      ====================================================== -->
+      <section class="skill-section" aria-labelledby="skill-gis-heading">
+
+        <div class="reveal">
+          <div class="skill-num">01 / Capability</div>
+          <div class="skill-divider"></div>
+          <h2 id="skill-gis-heading" class="skill-title">
+            <i class="fa-solid fa-map"></i>
+            GIS &amp; Spatial Intelligence
+          </h2>
+        </div>
+
+        <div class="skill-layout-sidebar reveal">
+
+          <!-- Main prose -->
+          <div>
+            <div class="skill-sub">
+              <div class="skill-sub-title">Drone Mapping &amp; Aerial Survey Operations</div>
+              <p>UAV platforms for terrain mapping, post-incident analysis, and search area documentation. Conducting systematic grid flights, processing photogrammetric point clouds, and delivering georeferenced orthomosaics and DEMs within hours of a mission. Capable of operating in remote areas without internet connectivity using offline ground control.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Predictive Disaster Modeling</div>
+              <p>Spatial risk assessment using historical data, terrain analysis, and real-time inputs. Building probability surfaces for wildfire spread, flood inundation, and landslide risk. Outputs feed directly into ICS planning section for resource pre-positioning and evacuation route prioritization.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">ArcGIS Field Data Collection &amp; Spatial Analysis</div>
+              <p>Mobile data collection in the field feeding into GIS databases in real time. Deploying Survey123 and Field Maps to field teams for structured data input — hazard locations, patient coordinates, resource caches, access routes. Syncing to cloud when connectivity allows; offline-capable when it doesn&#8217;t.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Application to SAR and Emergency Management</div>
+              <p>Building incident maps from scratch under time pressure. Resource tracking, probability-of-area maps for search planning, evacuation route analysis, and multi-day operational maps for extended incident management teams. Products are built to ICS standards for hand-off between operational periods.</p>
+            </div>
+
+            <div class="skill-tags">
+              <span class="tag-pill">ArcGIS Pro</span>
+              <span class="tag-pill">QGIS</span>
+              <span class="tag-pill">Pix4D</span>
+              <span class="tag-pill">Drone2Map</span>
+              <span class="tag-pill">GPS Units</span>
+              <span class="tag-pill">Survey123</span>
+              <span class="tag-pill">Field Maps</span>
+            </div>
+          </div>
+
+          <!-- Sidebar quick facts -->
+          <div>
+            <div class="quick-facts">
+              <div class="quick-facts-label">&#9658; Quick Facts</div>
+              <ul>
+                <li>GIS Certificate — Oregon State University</li>
+                <li>UAV pilot, fixed-wing &amp; multirotor platforms</li>
+                <li>Offline-capable field packages for zero-connectivity ops</li>
+                <li>ICS-integrated map products</li>
+                <li>WGS84 / NAD83 coordinate systems</li>
+              </ul>
+              <div class="qf-divider"></div>
+              <div class="quick-facts-mono">
+                <div><span>DRONE_SURVEY</span> ........ ACTIVE</div>
+                <div><span>TERRAIN_MODEL</span> ....... RENDERED</div>
+                <div><span>OFFLINE_PKG</span> ......... DEPLOYED</div>
+                <div><span>STATUS</span> .............. <span>FIELD READY</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SECTION 02 — Wilderness Medicine (full-width prose)
+      ====================================================== -->
+      <section class="skill-section" aria-labelledby="skill-med-heading">
+
+        <div class="reveal">
+          <div class="skill-num">02 / Capability</div>
+          <div class="skill-divider"></div>
+          <h2 id="skill-med-heading" class="skill-title">
+            <i class="fa-solid fa-briefcase-medical"></i>
+            Wilderness Medicine
+          </h2>
+        </div>
+
+        <div class="skill-layout-prose reveal">
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">WFA &amp; WFR Training</div>
+            <p>NOLS Wilderness Medicine program, foundational through advanced backcountry medical decision-making. WFR covers patient assessment systems, long-term field care, improvised splinting, wound management, and emergency evacuations. Trained to operate as the highest medical resource in the field when no other help is available or accessible.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">EMT-Basic</div>
+            <p>National Registry certified. Pre-hospital emergency care, triage under load, patient packaging, and ALS-level interface. Primary field medical responder for Oregon State Parks — operating on patrol in terrain where response times for additional EMS can stretch to 30+ minutes.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">EMT-Advanced</div>
+            <p>Advanced interventions including IV therapy and medication administration extending the scope of field care. Bridging the gap between wilderness protocols and pre-hospital ALS when ground transport is the only evacuation option.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Extended Emergency Life Support</div>
+            <p>Protocols for extended care when hospital access is hours or days away. Managing patients through deterioration, maintaining airway, circulation, and comfort in austere environments. Extended ELS training formalizes what the wilderness medicine framework leaves implicit: sometimes you are the hospital.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Operating Without Hospital Access</div>
+            <p>Field improvisation, patient monitoring over time, recognizing deterioration before it becomes catastrophic. The practical application of all certifications above — not in a simulation, but in terrain that doesn&#8217;t care about the protocol card in your pocket.</p>
+          </div>
+
+          <div class="skill-tags">
+            <span class="tag-pill">WFR</span>
+            <span class="tag-pill">WFA</span>
+            <span class="tag-pill">EMT-B</span>
+            <span class="tag-pill">EMT-A</span>
+            <span class="tag-pill">Extended ELS</span>
+            <span class="tag-pill">NOLS</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SECTION 03 — Technical Rescue (sidebar layout)
+      ====================================================== -->
+      <section class="skill-section" aria-labelledby="skill-rescue-heading">
+
+        <div class="reveal">
+          <div class="skill-num">03 / Capability</div>
+          <div class="skill-divider"></div>
+          <h2 id="skill-rescue-heading" class="skill-title">
+            <i class="fa-solid fa-rope"></i>
+            Technical Rescue
+          </h2>
+        </div>
+
+        <div class="skill-layout-sidebar reveal">
+
+          <!-- Main prose -->
+          <div>
+            <div class="skill-sub">
+              <div class="skill-sub-title">High-Angle Rope Rescue</div>
+              <p>Certified through OSU Adventure Leadership Institute. Rope systems design, anchor building in natural and artificial protection, mechanical advantage systems for raising and lowering, patient packaging in litter, and coordinated lowering on technical terrain. Operational on vertical faces where conventional evacuation is not possible.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Swiftwater / Whitewater Rescue</div>
+              <p>OSU ALI certified. River hydraulics and hazard recognition, throw bag technique and deployment, live bait rescue swimming, victim extraction from strainers and hydraulics. Trained for the scenarios where gear alone doesn&#8217;t get the patient out.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Snow and Avalanche Rescue</div>
+              <p>Beacon / probe / shovel protocol, companion rescue, systematic burial management and strategic probing for multiple burials. Managing patient hypothermia and trauma in post-avalanche environments where time is directly correlated with survival probability.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Rock Climbing Proficiency</div>
+              <p>Lead climbing, trad anchor systems, multi-pitch skills for accessing rescue terrain. Climbing competency isn&#8217;t separate from rescue work — it&#8217;s the prerequisite for getting to where the patient is.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Rope Systems</div>
+              <p>Static and dynamic systems, pulley mechanical advantage configurations (2:1, 3:1, 6:1), belay devices in guide mode and rappel, rescue hardware selection and inspection. Building systems quickly and correctly under pressure.</p>
+            </div>
+
+            <div class="skill-tags">
+              <span class="tag-pill">High-Angle</span>
+              <span class="tag-pill">Swiftwater</span>
+              <span class="tag-pill">OSU ALI</span>
+              <span class="tag-pill">Rope Systems</span>
+              <span class="tag-pill">Anchor Building</span>
+            </div>
+          </div>
+
+          <!-- Sidebar quick facts -->
+          <div>
+            <div class="quick-facts">
+              <div class="quick-facts-label">&#9658; Certifications</div>
+              <ul>
+                <li>Technical Rescue Cert — OSU ALI</li>
+                <li>High-Angle Rope Rescue — OSU ALI</li>
+                <li>Swiftwater Rescue — OSU ALI</li>
+                <li>Rock climbing, lead &amp; trad anchors</li>
+                <li>Avalanche beacon/probe/shovel protocol</li>
+              </ul>
+              <div class="qf-divider"></div>
+              <div class="quick-facts-mono">
+                <div><span>ROPE_SYSTEM</span> ......... RIGGED</div>
+                <div><span>ANCHOR</span> .............. BUILT</div>
+                <div><span>PATIENT</span> ............. PACKAGED</div>
+                <div><span>EXTRACTION</span> .......... <span>READY</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SECTION 04 — Communications (full-width prose)
+      ====================================================== -->
+      <section class="skill-section" aria-labelledby="skill-comms-heading">
+
+        <div class="reveal">
+          <div class="skill-num">04 / Capability</div>
+          <div class="skill-divider"></div>
+          <h2 id="skill-comms-heading" class="skill-title">
+            <i class="fa-solid fa-tower-broadcast"></i>
+            Communications
+          </h2>
+        </div>
+
+        <div class="skill-layout-prose reveal">
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Licensed HAM Radio Operator</div>
+            <p>FCC licensed. HAM radio is the backbone of backcountry emergency communications when commercial networks fail. Capable of reaching repeaters across mountain ranges, mesh networks in urban emergency setups, and individual operators over long distances with no infrastructure dependency. When cell towers go down in a disaster, HAM operators are the ones bridging the communications gap.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Satellite Communications</div>
+            <p>Garmin inReach operation for two-way messaging, SOS activation, and position tracking when all terrestrial communication options fail. Satellite phone operation for voice contact. Understanding the latency, coverage, and failure modes of satellite systems so they don&#8217;t become a single point of failure in a field communications plan.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Field Comms Coordination During Multi-Agency Incidents</div>
+            <p>Radio protocol for multi-agency operations — net control, traffic management, ICS radio assignments, and patching between incompatible systems. Understanding who owns which frequency, how to request a tactical channel, and how to keep radio traffic concise when lives depend on clear airspace.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Radio Protocols and Emergency Frequencies</div>
+            <p>Understanding the frequency landscape in the Pacific Northwest — simplex calling channels, National Simplex Frequency (146.520 MHz), NOAA weather monitoring, and agency-specific tactical channels. Proper procedure, brevity codes, and phonetic alphabet under stress. The difference between a radio operator and someone who owns a radio.</p>
+          </div>
+
+          <div class="skill-tags">
+            <span class="tag-pill">HAM Licensed</span>
+            <span class="tag-pill">FCC</span>
+            <span class="tag-pill">Garmin inReach</span>
+            <span class="tag-pill">ICS Radio</span>
+            <span class="tag-pill">Satellite Comms</span>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SECTION 05 — Emergency Management (sidebar layout)
+      ====================================================== -->
+      <section class="skill-section" aria-labelledby="skill-em-heading">
+
+        <div class="reveal">
+          <div class="skill-num">05 / Capability</div>
+          <div class="skill-divider"></div>
+          <h2 id="skill-em-heading" class="skill-title">
+            <i class="fa-solid fa-shield-halved"></i>
+            Emergency Management
+          </h2>
+        </div>
+
+        <div class="skill-layout-sidebar reveal">
+
+          <!-- Main prose -->
+          <div>
+            <div class="skill-sub">
+              <div class="skill-sub-title">Incident Command System (ICS)</div>
+              <p>NIMS framework, command structure, unified command — trained in how ICS scales from a two-person response to a 5,000-person Type 1 incident. Understanding the chain of command, span of control principles, and why the system exists: because improvised command structures fail under complexity.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Multi-Agency Coordination</div>
+              <p>Working across jurisdictions — Forest Service, BLM, county SAR, state parks, fire, law enforcement. Understanding agency liaisons, mutual aid agreements, shared resource requests, and the politics of unified command when nobody wants to give up authority but the incident demands it.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Resource Deployment and Logistics</div>
+              <p>Ordering, tracking, and demobilizing resources through the ICS logistics section. Staging area management, resource check-in/check-out, cache accountability. Knowing where every person, piece of equipment, and unit is on the incident at any given time.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Disaster Response Certificate Training (OSU)</div>
+              <p>Separate certificate program covering disaster planning, all-hazards response framework, phases of response and recovery, community resilience planning. Applied directly to field operations rather than staying theoretical.</p>
+            </div>
+
+            <div class="skill-sub">
+              <div class="skill-sub-title">Planning, Operations, Logistics Sections</div>
+              <p>Understanding the ICS section structure and how information flows between planning (situation status, IAP), operations (field execution), and logistics (resource support). Working in each section rather than only at a single role.</p>
+            </div>
+
+            <div class="skill-tags">
+              <span class="tag-pill">ICS</span>
+              <span class="tag-pill">NIMS</span>
+              <span class="tag-pill">Multi-Agency</span>
+              <span class="tag-pill">Disaster Planning</span>
+              <span class="tag-pill">OSU Cert</span>
+            </div>
+          </div>
+
+          <!-- Sidebar quick facts -->
+          <div>
+            <div class="quick-facts">
+              <div class="quick-facts-label">&#9658; Quick Facts</div>
+              <ul>
+                <li>Disaster Response Certificate — OSU</li>
+                <li>ICS / NIMS compliant</li>
+                <li>Multi-agency incident experience</li>
+                <li>Oregon State Parks contractor</li>
+                <li>All-hazards framework training</li>
+              </ul>
+              <div class="qf-divider"></div>
+              <div class="quick-facts-mono">
+                <div><span>ICS_STRUCTURE</span> ....... ACTIVE</div>
+                <div><span>UNIFIED_CMD</span> ......... CAPABLE</div>
+                <div><span>RESOURCES</span> ........... TRACKED</div>
+                <div><span>STATUS</span> .............. <span>OPERATIONAL</span></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </section>
+
+      <!-- ======================================================
+           SECTION 06 — Field Mobility & Mechanics (full-width prose)
+      ====================================================== -->
+      <section class="skill-section" aria-labelledby="skill-mobility-heading">
+
+        <div class="reveal">
+          <div class="skill-num">06 / Capability</div>
+          <div class="skill-divider"></div>
+          <h2 id="skill-mobility-heading" class="skill-title">
+            <i class="fa-solid fa-truck"></i>
+            Field Mobility &amp; Mechanics
+          </h2>
+        </div>
+
+        <div class="skill-layout-prose reveal">
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Mobile Command Capability</div>
+            <p>Operating from a vehicle-mounted platform, staging in remote areas, and sustaining field operations without resupply. The truck is an extension of the command post — power, communications, navigation, and medical gear all accessible from the cab or bed without returning to a fixed facility.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Garmin Tread Navigation and Overland GPS</div>
+            <p>Detailed backcountry navigation on unmaintained roads and two-track trails. Track logging, waypoint management, route planning with digital terrain overlays. The Garmin Tread is the field navigation standard for off-road emergency access where standard GPS units lack road data.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Engine Repair and Field Mechanics</div>
+            <p>Vehicle maintenance and roadside repair to keep trucks running in remote areas when no help is coming. Electrical diagnosis, fluid systems, suspension, basic drivetrain work. Not a full-service mechanic — but capable enough to nurse a broken vehicle 40 miles back to the trailhead and get back to the mission.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Remote Access and Overland Operations</div>
+            <p>Route finding on unmaintained roads, vehicle recovery techniques (hi-lift, traction boards, winch-assisted), knowing when not to proceed. The decision to turn around before the road becomes impassable is as important as the ability to recover from a mistake.</p>
+          </div>
+
+          <div class="skill-sub">
+            <div class="skill-sub-title">Why Mechanical Self-Sufficiency Matters</div>
+            <p>You can&#8217;t do the work if the vehicle is stuck 20 miles from the trailhead. Field mobility and mechanical capability aren&#8217;t secondary skills — they&#8217;re the logistics layer that makes every other capability in this document deployable. A broken-down truck is a cancelled mission.</p>
+          </div>
+
+          <div class="skill-tags">
+            <span class="tag-pill">Garmin Tread</span>
+            <span class="tag-pill">Overland GPS</span>
+            <span class="tag-pill">Field Mechanics</span>
+            <span class="tag-pill">Remote Access</span>
+          </div>
+
+        </div>
+      </section>
+
+    </div><!-- /.skills-main -->
+  </main>
+
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer role="contentinfo">
+    <div class="footer-inner">
+      <div class="status-wrap">
+        <div class="radar-ping" aria-hidden="true">
+          <div class="radar-dot"></div>
+          <div class="radar-wave"></div>
+          <div class="radar-wave"></div>
+          <div class="radar-wave"></div>
+        </div>
+        <span class="status-text">Status: Field Ready</span>
+      </div>
+
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-btn">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="mailto:inquiries@hamishcairns.com" class="footer-email">
+          inquiries@hamishcairns.com
+        </a>
+      </div>
+
+      <p class="footer-copy">&copy; 2038 H. Cairns</p>
+      <p class="footer-trail">2,650 mi &nbsp;&#183;&nbsp; Campo to Manning Park &nbsp;&#183;&nbsp; PCT</p>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="credentials.html">Credentials</a>
+        <a href="pct.html">PCT</a>
+      </nav>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ----------------------------------------------------------
+       THEME TOGGLE
+    ---------------------------------------------------------- */
+    (function () {
+      var html = document.documentElement;
+      var btn  = document.getElementById('theme-toggle');
+      var icon = document.getElementById('theme-icon');
+
+      btn.addEventListener('click', function () {
+        var isDark = html.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          html.setAttribute('data-theme', 'light');
+          icon.className = 'fa-solid fa-moon';
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          icon.className = 'fa-solid fa-sun';
+        }
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       HAMBURGER MENU
+    ---------------------------------------------------------- */
+    (function () {
+      var btn    = document.getElementById('hamburger');
+      var drawer = document.getElementById('mobile-drawer');
+      var links  = drawer.querySelectorAll('.mobile-link');
+
+      btn.addEventListener('click', function () {
+        var isOpen = drawer.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      links.forEach(function (link) {
+        link.addEventListener('click', function () {
+          drawer.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       SCROLL-REVEAL (Intersection Observer)
+    ---------------------------------------------------------- */
+    (function () {
+      var els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('visible'); });
+        return;
+      }
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.10 });
+      els.forEach(function (el) { obs.observe(el); });
+    })();
+  </script>
+</body>
+</html>
