@@ -1,0 +1,1097 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Hamish Cairns — Emergency Management</title>
+
+  <!-- Favicon: Star of Life in SAR Orange -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23FF6700'%3E%3Crect x='38' y='5' width='24' height='90' rx='5'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(60 50 50)'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(120 50 50)'/%3E%3Ccircle cx='50' cy='50' r='14'/%3E%3C/g%3E%3C/svg%3E" />
+
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- FontAwesome 6 Free -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+
+  <style>
+    /* ============================================================
+       CSS CUSTOM PROPERTIES — Theme Tokens
+    ============================================================ */
+    :root {
+      --bg-primary:   #0f1a0f;
+      --bg-secondary: #162316;
+      --bg-card:      #1a2e1a;
+      --bg-nav:       rgba(15, 26, 15, 0.92);
+      --accent:       #FF6700;
+      --accent-dim:   rgba(255, 103, 0, 0.18);
+      --text-primary: #e8ede8;
+      --text-secondary:#9aac9a;
+      --text-muted:   #607060;
+      --border:       rgba(154, 172, 154, 0.15);
+      --topo-opacity: 0.04;
+    }
+    [data-theme="light"] {
+      --bg-primary:   #f4f2ed;
+      --bg-secondary: #eceae3;
+      --bg-card:      #ffffff;
+      --bg-nav:       rgba(244, 242, 237, 0.95);
+      --accent:       #FF6700;
+      --accent-dim:   rgba(255, 103, 0, 0.10);
+      --text-primary: #1a2010;
+      --text-secondary:#3a4a3a;
+      --text-muted:   #7a8a7a;
+      --border:       rgba(26, 32, 16, 0.12);
+      --topo-opacity: 0.06;
+    }
+
+    /* ============================================================
+       BASE
+    ============================================================ */
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg-primary);
+      color: var(--text-primary);
+      line-height: 1.6;
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
+      position: relative;
+    }
+
+    /* ============================================================
+       CUSTOM SCROLLBAR
+    ============================================================ */
+    ::-webkit-scrollbar { width: 8px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb {
+      background: var(--accent);
+      border-radius: 4px;
+    }
+    ::-webkit-scrollbar-thumb:hover { background: #e05a00; }
+    /* Firefox */
+    html { scrollbar-color: var(--accent) var(--bg-secondary); scrollbar-width: thin; }
+
+    /* ============================================================
+       TOPOGRAPHIC BACKGROUND WATERMARK
+    ============================================================ */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      opacity: var(--topo-opacity);
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='none' stroke='%23FF6700' stroke-width='1'%3E%3Cellipse cx='200' cy='200' rx='190' ry='90'/%3E%3Cellipse cx='200' cy='200' rx='160' ry='72'/%3E%3Cellipse cx='200' cy='200' rx='130' ry='55'/%3E%3Cellipse cx='200' cy='200' rx='100' ry='40'/%3E%3Cellipse cx='200' cy='200' rx='70' ry='28'/%3E%3Cellipse cx='200' cy='200' rx='40' ry='16'/%3E%3Cellipse cx='50' cy='350' rx='120' ry='55'/%3E%3Cellipse cx='50' cy='350' rx='90' ry='40'/%3E%3Cellipse cx='50' cy='350' rx='60' ry='25'/%3E%3Cellipse cx='350' cy='60' rx='110' ry='50'/%3E%3Cellipse cx='350' cy='60' rx='80' ry='35'/%3E%3Cellipse cx='350' cy='60' rx='50' ry='20'/%3E%3C/g%3E%3C/svg%3E");
+      background-repeat: repeat;
+      background-size: 400px 400px;
+      transition: opacity 0.3s;
+    }
+
+    /* ============================================================
+       INTRO OVERLAY — Radar Pulse Reveal
+    ============================================================ */
+    #intro-overlay {
+      position: fixed;
+      inset: 0;
+      z-index: 9999;
+      background: #000;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+    }
+    #intro-overlay.hide {
+      pointer-events: none;
+      animation: overlayFade 0.5s ease-out 0.1s forwards;
+    }
+    @keyframes overlayFade {
+      to { opacity: 0; visibility: hidden; }
+    }
+
+    /* Water drop */
+    #drop {
+      position: absolute;
+      width: 10px;
+      height: 14px;
+      background: #00ff88;
+      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      opacity: 0;
+      animation: dropFall 0.6s ease-in 0.3s forwards;
+    }
+    @keyframes dropFall {
+      0%  { top: -20px; opacity: 1; }
+      100%{ top: calc(50vh - 7px); opacity: 1; }
+    }
+
+    /* Radar pulse ring */
+    .radar-ring {
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      border-radius: 50%;
+      border: 2px solid #00ff88;
+      opacity: 0;
+    }
+    .radar-ring.pulse {
+      animation: radarExpand 1.6s ease-out forwards;
+    }
+    @keyframes radarExpand {
+      0%   { transform: translate(-50%,-50%) scale(0); opacity: 0.9; width: 0; height: 0; }
+      100% { transform: translate(-50%,-50%) scale(1);  opacity: 0;   width: 300vmax; height: 300vmax; }
+    }
+    /* Second ring — slight delay */
+    .radar-ring:nth-child(2).pulse {
+      animation-delay: 0.2s;
+      border-color: rgba(0,255,136,0.4);
+    }
+
+    /* ============================================================
+       NAVIGATION
+    ============================================================ */
+    #navbar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      z-index: 100;
+      background: var(--bg-nav);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      -webkit-backdrop-filter: blur(8px);
+      transition: background 0.3s, border-color 0.3s;
+    }
+    #navbar .nav-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 0 1.5rem;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    #nav-brand {
+      font-weight: 900;
+      font-size: 1.1rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      text-decoration: none;
+    }
+    #nav-brand span { color: var(--accent); }
+    #nav-links {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+    #nav-links a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.82rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s;
+    }
+    #nav-links a:hover { color: var(--accent); }
+    #theme-toggle {
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.9rem;
+      transition: color 0.2s, border-color 0.2s, background 0.2s;
+    }
+    #theme-toggle:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    #hamburger {
+      display: none;
+      background: none;
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      width: 36px;
+      height: 36px;
+      border-radius: 6px;
+      cursor: pointer;
+      align-items: center;
+      justify-content: center;
+      font-size: 1rem;
+    }
+    /* Mobile nav drawer */
+    #mobile-drawer {
+      display: none;
+      position: fixed;
+      top: 60px;
+      left: 0;
+      right: 0;
+      background: var(--bg-nav);
+      border-bottom: 1px solid var(--border);
+      backdrop-filter: blur(8px);
+      z-index: 99;
+      flex-direction: column;
+      padding: 1rem 1.5rem 1.5rem;
+      gap: 0.75rem;
+    }
+    #mobile-drawer.open { display: flex; }
+    #mobile-drawer a {
+      color: var(--text-secondary);
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.5rem 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    #mobile-drawer a:hover { color: var(--accent); }
+
+    /* ============================================================
+       CONTENT WRAPPER
+    ============================================================ */
+    main { position: relative; z-index: 1; }
+    section { position: relative; z-index: 1; }
+
+    /* ============================================================
+       HERO SECTION
+    ============================================================ */
+    #hero {
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: flex-start;
+      padding: 7rem 1.5rem 0;
+      max-width: 1100px;
+      margin: 0 auto;
+      position: relative;
+      overflow: hidden;
+    }
+    .hero-coord {
+      font-size: 0.72rem;
+      letter-spacing: 0.12em;
+      color: var(--text-muted);
+      font-weight: 600;
+      position: absolute;
+      bottom: 14rem;
+      right: 2rem;
+      cursor: pointer;
+      transition: color 0.2s;
+      user-select: none;
+    }
+    .hero-coord:hover { color: var(--text-secondary); }
+    .trail-magic {
+      display: none;
+      color: var(--accent);
+      font-weight: 700;
+      font-size: 0.8rem;
+      letter-spacing: 0.08em;
+    }
+    .hero-tag {
+      font-size: 0.75rem;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .hero-tag::before {
+      content: '';
+      display: inline-block;
+      width: 28px;
+      height: 2px;
+      background: var(--accent);
+    }
+    .hero-name {
+      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-weight: 900;
+      letter-spacing: -0.02em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      line-height: 0.95;
+      margin-bottom: 1rem;
+    }
+    .hero-subtitle {
+      font-size: clamp(0.9rem, 2vw, 1.15rem);
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.75rem;
+    }
+    .hero-tagline {
+      font-size: clamp(0.85rem, 1.5vw, 1rem);
+      color: var(--text-secondary);
+      font-style: italic;
+      font-weight: 400;
+      margin-bottom: 2.5rem;
+    }
+
+    /* Mountain Ridge SVG — bottom of hero */
+    .mountain-scene {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 220px;
+      pointer-events: none;
+    }
+
+    /* ============================================================
+       SECTION SHARED STYLES
+    ============================================================ */
+    .section-wrap {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem;
+    }
+    .section-label {
+      font-size: 0.7rem;
+      letter-spacing: 0.25em;
+      text-transform: uppercase;
+      color: var(--accent);
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+    }
+    .section-title {
+      font-size: clamp(1.8rem, 4vw, 2.8rem);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: -0.01em;
+      color: var(--text-primary);
+      margin-bottom: 2.5rem;
+      line-height: 1;
+    }
+    .divider {
+      width: 48px;
+      height: 3px;
+      background: var(--accent);
+      margin-bottom: 2.5rem;
+    }
+
+    /* Scroll-reveal */
+    .reveal {
+      opacity: 0;
+      transform: translateY(28px);
+      transition: opacity 0.65s ease, transform 0.65s ease;
+    }
+    .reveal.visible {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* ============================================================
+       ABOUT SECTION
+    ============================================================ */
+    #about { background: var(--bg-secondary); }
+    .about-card {
+      border-left: 3px solid var(--accent);
+      background: var(--bg-card);
+      border-radius: 0 8px 8px 0;
+      padding: 2rem 2rem 2rem 1.75rem;
+      max-width: 760px;
+    }
+    .about-card p {
+      color: var(--text-secondary);
+      font-size: 1rem;
+      line-height: 1.8;
+      font-weight: 400;
+    }
+
+    /* ============================================================
+       SKILLS — THE TOOLKIT
+    ============================================================ */
+    #skills { background: var(--bg-primary); }
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.25rem;
+    }
+    @media (min-width: 640px) {
+      .skills-grid { grid-template-columns: 1fr 1fr; }
+    }
+    @media (min-width: 1024px) {
+      .skills-grid { grid-template-columns: 1fr 1fr 1fr; }
+    }
+    .skill-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.75rem;
+      transition: border-color 0.2s, box-shadow 0.2s;
+      transform-style: preserve-3d;
+      will-change: transform;
+      cursor: default;
+    }
+    .skill-card:hover {
+      border-color: rgba(255, 103, 0, 0.4);
+      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,103,0,0.1);
+    }
+    .skill-icon {
+      color: var(--accent);
+      font-size: 1.6rem;
+      margin-bottom: 1rem;
+    }
+    .skill-title {
+      font-size: 0.9rem;
+      font-weight: 700;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 0.75rem;
+    }
+    .skill-list {
+      list-style: none;
+      padding: 0;
+    }
+    .skill-list li {
+      font-size: 0.82rem;
+      color: var(--text-secondary);
+      padding: 0.2rem 0;
+      display: flex;
+      align-items: flex-start;
+      gap: 0.5rem;
+    }
+    .skill-list li::before {
+      content: '›';
+      color: var(--accent);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 0.05rem;
+    }
+
+    /* ============================================================
+       TRUCK EASTER EGG
+    ============================================================ */
+    #truck-easter-egg {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 1.5rem 0;
+      position: relative;
+      z-index: 1;
+      opacity: 0;
+      transition: opacity 0.8s ease;
+    }
+    #truck-easter-egg.in-view { opacity: 0.2; }
+    #truck-easter-egg svg {
+      width: min(480px, 88vw);
+    }
+
+    /* ============================================================
+       EDUCATION SECTION
+    ============================================================ */
+    #education { background: var(--bg-secondary); }
+    .edu-card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 2rem 2.25rem;
+      max-width: 600px;
+      display: flex;
+      align-items: flex-start;
+      gap: 1.5rem;
+    }
+    .edu-icon {
+      color: var(--accent);
+      font-size: 2rem;
+      flex-shrink: 0;
+      margin-top: 0.1rem;
+    }
+    .edu-school {
+      font-size: 1.05rem;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+      color: var(--text-primary);
+      margin-bottom: 0.3rem;
+    }
+    .edu-degree {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      margin-bottom: 0.25rem;
+    }
+    .edu-conc {
+      font-size: 0.78rem;
+      color: var(--accent);
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-bottom: 0.25rem;
+    }
+    .edu-year {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: 600;
+      letter-spacing: 0.1em;
+    }
+
+    /* ============================================================
+       FOOTER
+    ============================================================ */
+    footer {
+      background: var(--bg-primary);
+      border-top: 1px solid var(--border);
+      padding: 3rem 1.5rem 2rem;
+      position: relative;
+      z-index: 1;
+    }
+    .footer-inner {
+      max-width: 1100px;
+      margin: 0 auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 1.5rem;
+      text-align: center;
+    }
+    /* Radar ping status */
+    .status-wrap {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+    .radar-ping {
+      position: relative;
+      width: 18px;
+      height: 18px;
+      flex-shrink: 0;
+    }
+    .radar-dot {
+      position: absolute;
+      inset: 50%;
+      transform: translate(-50%, -50%);
+      width: 8px;
+      height: 8px;
+      background: var(--accent);
+      border-radius: 50%;
+    }
+    .radar-wave {
+      position: absolute;
+      inset: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 18px;
+      height: 18px;
+      border: 2px solid var(--accent);
+      border-radius: 50%;
+      opacity: 0;
+      animation: radarPing 2.4s ease-out infinite;
+    }
+    .radar-wave:nth-child(3) { animation-delay: 0.8s; }
+    .radar-wave:nth-child(4) { animation-delay: 1.6s; }
+    @keyframes radarPing {
+      0%   { transform: translate(-50%,-50%) scale(0.3); opacity: 0.9; }
+      100% { transform: translate(-50%,-50%) scale(3.2); opacity: 0; }
+    }
+    .status-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--accent);
+      animation: statusPulse 2.4s ease-in-out infinite;
+    }
+    @keyframes statusPulse {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.65; }
+    }
+    .footer-links {
+      display: flex;
+      align-items: center;
+      gap: 1.25rem;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .footer-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      background: var(--accent);
+      color: #fff;
+      text-decoration: none;
+      font-size: 0.8rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      padding: 0.6rem 1.25rem;
+      border-radius: 4px;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .footer-btn:hover { background: #e05a00; transform: translateY(-1px); }
+    .footer-email {
+      font-size: 0.82rem;
+      color: var(--text-muted);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+    .footer-email:hover { color: var(--accent); }
+    .footer-copy {
+      font-size: 0.72rem;
+      color: var(--text-muted);
+      letter-spacing: 0.08em;
+    }
+    .footer-trail {
+      font-size: 0.68rem;
+      color: var(--text-muted);
+      letter-spacing: 0.12em;
+      opacity: 0.6;
+    }
+
+    /* ============================================================
+       RESPONSIVE OVERRIDES
+    ============================================================ */
+    @media (max-width: 767px) {
+      #nav-links { display: none; }
+      #hamburger { display: flex; }
+      .hero-coord { bottom: 13rem; right: 1rem; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ============================================================
+       INTRO OVERLAY
+  ============================================================ -->
+  <div id="intro-overlay" aria-hidden="true">
+    <div id="drop"></div>
+    <div class="radar-ring" id="ring1"></div>
+    <div class="radar-ring" id="ring2"></div>
+  </div>
+
+  <!-- ============================================================
+       NAVIGATION
+  ============================================================ -->
+  <nav id="navbar" role="navigation" aria-label="Main navigation">
+    <div class="nav-inner">
+      <a href="#hero" id="nav-brand">H.<span>CAIRNS</span></a>
+      <div id="nav-links" role="list">
+        <a href="#about" role="listitem">About</a>
+        <a href="#skills" role="listitem">Skills</a>
+        <a href="#education" role="listitem">Education</a>
+        <a href="#contact" role="listitem">Contact</a>
+      </div>
+      <div style="display:flex;align-items:center;gap:0.6rem;">
+        <button id="hamburger" aria-label="Open menu" aria-expanded="false">
+          <i class="fa-solid fa-bars"></i>
+        </button>
+        <button id="theme-toggle" aria-label="Toggle color theme">
+          <i class="fa-solid fa-sun" id="theme-icon"></i>
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Mobile Drawer -->
+  <div id="mobile-drawer" role="navigation" aria-label="Mobile navigation">
+    <a href="#about" class="mobile-link">About</a>
+    <a href="#skills" class="mobile-link">Skills</a>
+    <a href="#education" class="mobile-link">Education</a>
+    <a href="#contact" class="mobile-link">Contact</a>
+  </div>
+
+  <main>
+    <!-- ============================================================
+         HERO SECTION
+    ============================================================ -->
+    <section id="hero">
+      <div class="hero-tag">Emergency Management Contractor</div>
+      <h1 class="hero-name">Hamish<br>Cairns</h1>
+      <p class="hero-subtitle">Wilderness Medic &amp; Emergency Management Specialist</p>
+      <p class="hero-tagline">"Mapping the Chaos. Guarding the Trail."</p>
+
+      <!-- Coordinates Easter Egg -->
+      <div class="hero-coord" id="coord-btn" aria-label="Location coordinates, click for easter egg">
+        <span id="coord-text">44.5646° N, 123.2620° W</span>
+        <span class="trail-magic" id="trail-magic">TRAIL MAGIC ✨</span>
+      </div>
+
+      <!-- CSS Mountain Silhouette -->
+      <div class="mountain-scene" aria-hidden="true">
+        <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
+          <!-- Back ridge — darkest -->
+          <polygon points="0,220 0,150 80,120 160,90 230,110 320,60 400,85 480,50 560,75 640,40 720,65 800,35 880,55 960,30 1040,55 1120,80 1200,60 1280,90 1360,110 1440,95 1440,220" fill="rgba(15,26,15,0.55)"/>
+          <!-- Mid ridge -->
+          <polygon points="0,220 0,170 100,145 200,130 300,115 380,125 460,100 540,115 620,95 700,108 780,90 860,105 940,88 1020,100 1100,120 1180,105 1260,125 1340,140 1440,130 1440,220" fill="rgba(15,26,15,0.75)"/>
+          <!-- Front ridge — most prominent -->
+          <polygon points="0,220 0,185 120,172 240,158 340,165 440,145 520,158 620,140 700,152 780,140 860,155 960,138 1060,150 1160,158 1260,162 1360,170 1440,165 1440,220" fill="var(--bg-primary)"/>
+        </svg>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         ABOUT SECTION
+    ============================================================ -->
+    <section id="about">
+      <div class="section-wrap">
+        <div class="section-label">01 / Personnel Record</div>
+        <h2 class="section-title reveal">About</h2>
+        <div class="divider"></div>
+        <div class="about-card reveal">
+          <p>
+            Emergency management contractor and backcountry emergency responder with Oregon State Parks.
+            Built on 2,650 miles of trail discipline from a Pacific Crest Trail thru-hike and a foundation
+            in natural resource science. Trained in technical rescue, wilderness medicine, and spatial
+            intelligence. Operates where cell service ends and the work begins.
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         SKILLS — THE TOOLKIT
+    ============================================================ -->
+    <section id="skills">
+      <div class="section-wrap">
+        <div class="section-label">02 / Capabilities</div>
+        <h2 class="section-title reveal">The Toolkit</h2>
+        <div class="divider"></div>
+        <div class="skills-grid">
+
+          <!-- Card 1: GIS -->
+          <div class="skill-card reveal" data-tilt>
+            <div class="skill-icon"><i class="fa-solid fa-map-location-dot"></i></div>
+            <div class="skill-title">GIS &amp; Spatial Intel</div>
+            <ul class="skill-list">
+              <li>Drone mapping &amp; aerial survey</li>
+              <li>Predictive disaster modeling</li>
+              <li>ArcGIS &amp; field data collection</li>
+            </ul>
+          </div>
+
+          <!-- Card 2: Wilderness Medicine -->
+          <div class="skill-card reveal" data-tilt>
+            <div class="skill-icon"><i class="fa-solid fa-kit-medical"></i></div>
+            <div class="skill-title">Wilderness Medicine</div>
+            <ul class="skill-list">
+              <li>Wilderness First Responder (WFR)</li>
+              <li>US EMT-B Certified</li>
+              <li>Backcountry patient care &amp; evacuation</li>
+            </ul>
+          </div>
+
+          <!-- Card 3: Technical Rescue -->
+          <div class="skill-card reveal" data-tilt>
+            <div class="skill-icon"><i class="fa-solid fa-mountain"></i></div>
+            <div class="skill-title">Technical Rescue</div>
+            <ul class="skill-list">
+              <li>High-angle rope rescue</li>
+              <li>Swiftwater rescue</li>
+              <li>Snow &amp; avalanche rescue</li>
+              <li>OSU ALI Certified</li>
+            </ul>
+          </div>
+
+          <!-- Card 4: Communications -->
+          <div class="skill-card reveal" data-tilt>
+            <div class="skill-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
+            <div class="skill-title">Communications</div>
+            <ul class="skill-list">
+              <li>Licensed HAM Radio Operator</li>
+              <li>Satellite communications</li>
+              <li>Field comms coordination</li>
+            </ul>
+          </div>
+
+          <!-- Card 5: Emergency Management -->
+          <div class="skill-card reveal" data-tilt>
+            <div class="skill-icon"><i class="fa-solid fa-shield-halved"></i></div>
+            <div class="skill-title">Emergency Management</div>
+            <ul class="skill-list">
+              <li>Incident Command System (ICS)</li>
+              <li>Multi-agency coordination</li>
+              <li>Resource deployment &amp; logistics</li>
+            </ul>
+          </div>
+
+          <!-- Card 6: Field Mobility -->
+          <div class="skill-card reveal" data-tilt>
+            <div class="skill-icon"><i class="fa-solid fa-truck-monster"></i></div>
+            <div class="skill-title">Field Mobility</div>
+            <ul class="skill-list">
+              <li>Mobile command capability</li>
+              <li>Garmin Tread navigation</li>
+              <li>Remote access &amp; overland ops</li>
+            </ul>
+          </div>
+
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================================================
+         TRUCK EASTER EGG
+    ============================================================ -->
+    <div id="truck-easter-egg" aria-hidden="true">
+      <!--
+        F-150 wireframe outline — side profile, SAR orange stroke, no fill.
+        Keep it subtle: opacity 0.12-0.2 max, handled via JS scroll.
+      -->
+      <svg viewBox="0 0 520 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g stroke="#FF6700" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
+          <!-- Body outline -->
+          <path d="M60,130 L60,80 L80,58 L180,50 L240,50 L300,58 L380,60 L420,70 L440,80 L450,100 L450,130"/>
+          <!-- Cab roof -->
+          <path d="M80,58 Q100,40 140,38 L240,38 L270,50"/>
+          <!-- Windshield -->
+          <path d="M100,58 L120,40 L200,40 L220,58"/>
+          <!-- Rear window -->
+          <path d="M240,50 L255,40 L270,40 L280,50"/>
+          <!-- Bed sides -->
+          <path d="M300,60 L300,130"/>
+          <!-- Wheel arches -->
+          <path d="M100,130 A36,20 0 0,0 172,130"/>
+          <path d="M330,130 A36,20 0 0,0 402,130"/>
+          <!-- Wheels -->
+          <circle cx="136" cy="136" r="22"/>
+          <circle cx="136" cy="136" r="10"/>
+          <circle cx="366" cy="136" r="22"/>
+          <circle cx="366" cy="136" r="10"/>
+          <!-- Bumpers -->
+          <path d="M55,105 L55,125 L62,130"/>
+          <path d="M450,110 L455,125 L448,130"/>
+          <!-- Running board -->
+          <path d="M62,115 L300,115"/>
+          <!-- Door line -->
+          <path d="M160,58 L160,115"/>
+          <!-- Hood line -->
+          <path d="M80,60 L80,115"/>
+          <!-- Mirrors -->
+          <path d="M105,55 L95,52 L93,58"/>
+          <!-- Headlight -->
+          <rect x="58" y="88" width="14" height="10" rx="2"/>
+          <!-- Tail light -->
+          <rect x="438" y="90" width="12" height="10" rx="2"/>
+        </g>
+      </svg>
+    </div>
+
+    <!-- ============================================================
+         EDUCATION SECTION
+    ============================================================ -->
+    <section id="education">
+      <div class="section-wrap">
+        <div class="section-label">03 / Academic Record</div>
+        <h2 class="section-title reveal">Education</h2>
+        <div class="divider"></div>
+        <div class="edu-card reveal">
+          <div class="edu-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+          <div>
+            <div class="edu-school">Oregon State University</div>
+            <div class="edu-degree">B.S. in Natural Resources</div>
+            <div class="edu-conc">Environmental Disaster Management</div>
+            <div class="edu-year">Class of 2035 &nbsp;·&nbsp; 44.5646° N, 123.2620° W</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Contact anchor — links to footer -->
+    <div id="contact" style="height:0;overflow:hidden;" aria-hidden="true"></div>
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+      <!-- STATUS: FIELD READY with radar ping -->
+      <div class="status-wrap">
+        <div class="radar-ping" aria-hidden="true">
+          <div class="radar-dot"></div>
+          <div class="radar-wave"></div>
+          <div class="radar-wave"></div>
+          <div class="radar-wave"></div>
+        </div>
+        <span class="status-text">Status: Field Ready</span>
+      </div>
+
+      <!-- Links -->
+      <div class="footer-links">
+        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-btn">
+          <i class="fa-brands fa-linkedin"></i> LinkedIn
+        </a>
+        <a href="mailto:inquiries@hamishcairns.com" class="footer-email">
+          inquiries@hamishcairns.com
+        </a>
+      </div>
+
+      <p class="footer-copy">&copy; 2038 H. Cairns</p>
+      <p class="footer-trail">2,650 mi &nbsp;·&nbsp; Campo to Manning Park &nbsp;·&nbsp; PCT</p>
+    </div>
+  </footer>
+
+  <!-- ============================================================
+       JAVASCRIPT
+  ============================================================ -->
+  <script>
+    'use strict';
+
+    /* ----------------------------------------------------------
+       INTRO ANIMATION — Radar Pulse Reveal
+    ---------------------------------------------------------- */
+    (function () {
+      var overlay = document.getElementById('intro-overlay');
+      var drop = document.getElementById('drop');
+      var ring1 = document.getElementById('ring1');
+      var ring2 = document.getElementById('ring2');
+
+      // After drop falls (~0.9s) trigger rings
+      setTimeout(function () {
+        drop.style.opacity = '0';
+        ring1.classList.add('pulse');
+        ring2.classList.add('pulse');
+      }, 900);
+
+      // Hide overlay after rings expand
+      setTimeout(function () {
+        overlay.classList.add('hide');
+        // Remove from DOM after fade
+        setTimeout(function () {
+          overlay.remove();
+        }, 700);
+      }, 2100);
+    })();
+
+    /* ----------------------------------------------------------
+       THEME TOGGLE
+    ---------------------------------------------------------- */
+    (function () {
+      var html = document.documentElement;
+      var btn = document.getElementById('theme-toggle');
+      var icon = document.getElementById('theme-icon');
+
+      btn.addEventListener('click', function () {
+        var isDark = html.getAttribute('data-theme') === 'dark';
+        if (isDark) {
+          html.setAttribute('data-theme', 'light');
+          icon.className = 'fa-solid fa-moon';
+        } else {
+          html.setAttribute('data-theme', 'dark');
+          icon.className = 'fa-solid fa-sun';
+        }
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       HAMBURGER MENU
+    ---------------------------------------------------------- */
+    (function () {
+      var btn = document.getElementById('hamburger');
+      var drawer = document.getElementById('mobile-drawer');
+      var links = drawer.querySelectorAll('.mobile-link');
+
+      btn.addEventListener('click', function () {
+        var isOpen = drawer.classList.toggle('open');
+        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+      });
+
+      links.forEach(function (link) {
+        link.addEventListener('click', function () {
+          drawer.classList.remove('open');
+          btn.setAttribute('aria-expanded', 'false');
+        });
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       SCROLL-REVEAL (Intersection Observer)
+    ---------------------------------------------------------- */
+    (function () {
+      var els = document.querySelectorAll('.reveal');
+      if (!('IntersectionObserver' in window)) {
+        els.forEach(function (el) { el.classList.add('visible'); });
+        return;
+      }
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            e.target.classList.add('visible');
+            obs.unobserve(e.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      els.forEach(function (el) { obs.observe(el); });
+    })();
+
+    /* ----------------------------------------------------------
+       COORDINATES EASTER EGG — Trail Magic
+    ---------------------------------------------------------- */
+    (function () {
+      var btn = document.getElementById('coord-btn');
+      var coordText = document.getElementById('coord-text');
+      var magic = document.getElementById('trail-magic');
+      var timer = null;
+
+      btn.addEventListener('click', function () {
+        if (timer) return; // debounce
+        coordText.style.display = 'none';
+        magic.style.display = 'inline';
+        timer = setTimeout(function () {
+          magic.style.display = 'none';
+          coordText.style.display = 'inline';
+          timer = null;
+        }, 1800);
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       3D TILT EFFECT on Skill Cards
+    ---------------------------------------------------------- */
+    (function () {
+      var cards = document.querySelectorAll('[data-tilt]');
+      cards.forEach(function (card) {
+        card.addEventListener('mousemove', function (e) {
+          var rect = card.getBoundingClientRect();
+          var x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 to 0.5
+          var y = (e.clientY - rect.top)  / rect.height - 0.5;
+          var tiltX = -(y * 12); // degrees
+          var tiltY =  (x * 12);
+          card.style.transform = 'perspective(600px) rotateX(' + tiltX + 'deg) rotateY(' + tiltY + 'deg) scale3d(1.02,1.02,1.02)';
+        });
+        card.addEventListener('mouseleave', function () {
+          card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
+        });
+      });
+    })();
+
+    /* ----------------------------------------------------------
+       TRUCK EASTER EGG — Scroll Reveal
+    ---------------------------------------------------------- */
+    (function () {
+      var truck = document.getElementById('truck-easter-egg');
+      if (!truck) return;
+
+      if (!('IntersectionObserver' in window)) return;
+
+      var obs = new IntersectionObserver(function (entries) {
+        entries.forEach(function (e) {
+          if (e.isIntersecting) {
+            truck.classList.add('in-view');
+          } else {
+            truck.classList.remove('in-view');
+          }
+        });
+      }, { threshold: 0.3 });
+      obs.observe(truck);
+    })();
+  </script>
+</body>
+</html>
