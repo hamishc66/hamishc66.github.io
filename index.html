@@ -11,10 +11,10 @@
   <!-- Google Fonts: Inter -->
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
 
   <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.tailwindcss.com"><\/script>
 
   <!-- FontAwesome 6 Free -->
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
@@ -24,526 +24,769 @@
        CSS CUSTOM PROPERTIES — Theme Tokens
     ============================================================ */
     :root {
-      --bg-primary:   #0f1a0f;
-      --bg-secondary: #162316;
-      --bg-card:      #1a2e1a;
-      --bg-nav:       rgba(15, 26, 15, 0.92);
-      --accent:       #FF6700;
-      --accent-dim:   rgba(255, 103, 0, 0.18);
-      --text-primary: #e8ede8;
+      --bg-primary:    #0f1a0f;
+      --bg-secondary:  #162316;
+      --bg-card:       #1a2e1a;
+      --bg-nav:        rgba(15, 26, 15, 0.92);
+      --accent:        #FF6700;
+      --accent-dim:    rgba(255, 103, 0, 0.18);
+      --text-primary:  #e8ede8;
       --text-secondary:#9aac9a;
-      --text-muted:   #607060;
-      --border:       rgba(154, 172, 154, 0.15);
-      --topo-opacity: 0.04;
+      --text-muted:    #607060;
+      --border:        rgba(154, 172, 154, 0.15);
+      --topo-opacity:  0.04;
     }
     [data-theme="light"] {
-      --bg-primary:   #f4f2ed;
-      --bg-secondary: #eceae3;
-      --bg-card:      #ffffff;
-      --bg-nav:       rgba(244, 242, 237, 0.95);
-      --accent:       #FF6700;
-      --accent-dim:   rgba(255, 103, 0, 0.10);
-      --text-primary: #1a2010;
+      --bg-primary:    #f4f2ed;
+      --bg-secondary:  #eceae3;
+      --bg-card:       #ffffff;
+      --bg-nav:        rgba(244, 242, 237, 0.95);
+      --accent:        #FF6700;
+      --accent-dim:    rgba(255, 103, 0, 0.10);
+      --text-primary:  #1a2010;
       --text-secondary:#3a4a3a;
-      --text-muted:   #7a8a7a;
-      --border:       rgba(26, 32, 16, 0.12);
-      --topo-opacity: 0.06;
+      --text-muted:    #7a8a7a;
+      --border:        rgba(26, 32, 16, 0.12);
+      --topo-opacity:  0.06;
     }
 
     /* ============================================================
-       BASE
+       BASE RESET & BODY
     ============================================================ */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 
-    html { scroll-behavior: smooth; }
+    html {
+      scroll-behavior: smooth;
+      scrollbar-width: thin;
+      scrollbar-color: var(--accent) var(--bg-secondary);
+    }
+    ::-webkit-scrollbar { width: 6px; }
+    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
+    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
 
     body {
       font-family: 'Inter', sans-serif;
       background-color: var(--bg-primary);
       color: var(--text-primary);
-      line-height: 1.6;
+      min-height: 100vh;
       overflow-x: hidden;
-      transition: background-color 0.3s, color 0.3s;
-      position: relative;
+      transition: background-color 0.3s ease, color 0.3s ease;
     }
 
-    /* ============================================================
-       CUSTOM SCROLLBAR
-    ============================================================ */
-    ::-webkit-scrollbar { width: 8px; }
-    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-    ::-webkit-scrollbar-thumb {
-      background: var(--accent);
-      border-radius: 4px;
-    }
-    ::-webkit-scrollbar-thumb:hover { background: #e05a00; }
-    /* Firefox */
-    html { scrollbar-color: var(--accent) var(--bg-secondary); scrollbar-width: thin; }
-
-    /* ============================================================
-       TOPOGRAPHIC BACKGROUND WATERMARK
-    ============================================================ */
+    /* Topo SVG watermark */
     body::before {
       content: '';
       position: fixed;
       inset: 0;
-      z-index: 0;
-      pointer-events: none;
-      opacity: var(--topo-opacity);
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cg fill='none' stroke='%23FF6700' stroke-width='1'%3E%3Cellipse cx='200' cy='200' rx='190' ry='90'/%3E%3Cellipse cx='200' cy='200' rx='160' ry='72'/%3E%3Cellipse cx='200' cy='200' rx='130' ry='55'/%3E%3Cellipse cx='200' cy='200' rx='100' ry='40'/%3E%3Cellipse cx='200' cy='200' rx='70' ry='28'/%3E%3Cellipse cx='200' cy='200' rx='40' ry='16'/%3E%3Cellipse cx='50' cy='350' rx='120' ry='55'/%3E%3Cellipse cx='50' cy='350' rx='90' ry='40'/%3E%3Cellipse cx='50' cy='350' rx='60' ry='25'/%3E%3Cellipse cx='350' cy='60' rx='110' ry='50'/%3E%3Cellipse cx='350' cy='60' rx='80' ry='35'/%3E%3Cellipse cx='350' cy='60' rx='50' ry='20'/%3E%3C/g%3E%3C/svg%3E");
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cg fill='none' stroke='%239aac9a' stroke-width='1'%3E%3Cellipse cx='400' cy='400' rx='60' ry='40'/%3E%3Cellipse cx='400' cy='400' rx='110' ry='75'/%3E%3Cellipse cx='400' cy='400' rx='160' ry='115'/%3E%3Cellipse cx='400' cy='400' rx='215' ry='158'/%3E%3Cellipse cx='400' cy='400' rx='275' ry='205'/%3E%3Cellipse cx='400' cy='400' rx='340' ry='255'/%3E%3Cellipse cx='200' cy='200' rx='50' ry='35'/%3E%3Cellipse cx='200' cy='200' rx='90' ry='65'/%3E%3Cellipse cx='200' cy='200' rx='135' ry='98'/%3E%3Cellipse cx='600' cy='600' rx='55' ry='38'/%3E%3Cellipse cx='600' cy='600' rx='100' ry='72'/%3E%3Cellipse cx='600' cy='600' rx='150' ry='108'/%3E%3C/g%3E%3C/svg%3E");
       background-repeat: repeat;
-      background-size: 400px 400px;
-      transition: opacity 0.3s;
+      background-size: 800px 800px;
+      opacity: var(--topo-opacity);
+      pointer-events: none;
+      z-index: 0;
     }
 
+    main, nav, footer, section { position: relative; z-index: 1; }
+
     /* ============================================================
-       INTRO OVERLAY — Radar Pulse Reveal
+       INTRO OVERLAY
     ============================================================ */
     #intro-overlay {
       position: fixed;
       inset: 0;
+      background: var(--bg-primary);
       z-index: 9999;
-      background: #000;
       display: flex;
       align-items: center;
       justify-content: center;
-      overflow: hidden;
+      transition: opacity 0.7s ease;
     }
-    #intro-overlay.hide {
-      pointer-events: none;
-      animation: overlayFade 0.5s ease-out 0.1s forwards;
+    #intro-overlay.hide { opacity: 0; pointer-events: none; }
+
+    #intro-svg { overflow: visible; }
+
+    #drop { transition: opacity 0.3s ease; }
+
+    .ring-circle {
+      fill: none;
+      stroke: var(--accent);
+      stroke-width: 2;
+      opacity: 0;
+      transform-origin: 50px 50px;
     }
-    @keyframes overlayFade {
-      to { opacity: 0; visibility: hidden; }
+    .ring-circle.pulse { animation: ring-expand 1.1s ease-out forwards; }
+    .ring-circle:nth-child(2).pulse { animation-delay: 0.15s; }
+
+    @keyframes ring-expand {
+      0%   { r: 8;  opacity: 0.85; }
+      100% { r: 55; opacity: 0; }
     }
 
-    /* Water drop */
-    #drop {
-      position: absolute;
-      width: 10px;
-      height: 14px;
-      background: #00ff88;
-      border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%;
-      top: -20px;
-      left: 50%;
-      transform: translateX(-50%);
-      opacity: 0;
-      animation: dropFall 0.6s ease-in 0.3s forwards;
+    #drop-shape {
+      fill: var(--accent);
+      animation: drop-fall 0.75s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
     }
-    @keyframes dropFall {
-      0%  { top: -20px; opacity: 1; }
-      100%{ top: calc(50vh - 7px); opacity: 1; }
-    }
-
-    /* Radar pulse ring */
-    .radar-ring {
-      position: absolute;
-      left: 50%;
-      top: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      border-radius: 50%;
-      border: 2px solid #00ff88;
-      opacity: 0;
-    }
-    .radar-ring.pulse {
-      animation: radarExpand 1.6s ease-out forwards;
-    }
-    @keyframes radarExpand {
-      0%   { transform: translate(-50%,-50%) scale(0); opacity: 0.9; width: 0; height: 0; }
-      100% { transform: translate(-50%,-50%) scale(1);  opacity: 0;   width: 300vmax; height: 300vmax; }
-    }
-    /* Second ring — slight delay */
-    .radar-ring:nth-child(2).pulse {
-      animation-delay: 0.2s;
-      border-color: rgba(0,255,136,0.4);
+    @keyframes drop-fall {
+      0%   { transform: translateY(-60px); opacity: 0; }
+      60%  { opacity: 1; }
+      100% { transform: translateY(0px);  opacity: 1; }
     }
 
     /* ============================================================
        NAVIGATION
     ============================================================ */
-    #navbar {
+    #main-nav {
       position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      z-index: 100;
+      top: 0; left: 0; right: 0;
+      height: 56px;
       background: var(--bg-nav);
+      backdrop-filter: blur(14px);
+      -webkit-backdrop-filter: blur(14px);
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(8px);
-      -webkit-backdrop-filter: blur(8px);
-      transition: background 0.3s, border-color 0.3s;
-    }
-    #navbar .nav-inner {
-      max-width: 1100px;
-      margin: 0 auto;
+      z-index: 1000;
+      display: flex;
+      align-items: center;
       padding: 0 1.5rem;
-      height: 60px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
+      gap: 1.5rem;
     }
-    #nav-brand {
+
+    .nav-brand {
       font-weight: 900;
-      font-size: 1.1rem;
+      font-size: 1.05rem;
       letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-primary);
+      color: var(--accent);
       text-decoration: none;
+      flex-shrink: 0;
     }
-    #nav-brand span { color: var(--accent); }
-    #nav-links {
+
+    .nav-links {
       display: flex;
       align-items: center;
-      gap: 2rem;
+      gap: 0.2rem;
+      flex: 1;
+      justify-content: center;
+      flex-wrap: wrap;
     }
-    #nav-links a {
+
+    .nav-link {
       color: var(--text-secondary);
       text-decoration: none;
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.08em;
       text-transform: uppercase;
-      transition: color 0.2s;
+      padding: 0.3rem 0.6rem;
+      border-radius: 4px;
+      transition: color 0.2s ease, background 0.2s ease;
     }
-    #nav-links a:hover { color: var(--accent); }
+    .nav-link:hover { color: var(--accent); background: var(--accent-dim); }
+    .nav-link.active { color: var(--accent); }
+
+    .nav-anchor {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.7rem;
+      font-weight: 500;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      padding: 0.25rem 0.45rem;
+      border-radius: 3px;
+      transition: color 0.2s ease;
+      border-left: 1px solid var(--border);
+      margin-left: 0.15rem;
+    }
+    .nav-anchor:hover { color: var(--accent); }
+
     #theme-toggle {
       background: none;
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      width: 36px;
-      height: 36px;
+      width: 34px; height: 34px;
       border-radius: 6px;
       cursor: pointer;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 0.9rem;
-      transition: color 0.2s, border-color 0.2s, background 0.2s;
+      font-size: 0.85rem;
+      display: flex; align-items: center; justify-content: center;
+      transition: border-color 0.2s, color 0.2s;
+      flex-shrink: 0;
     }
-    #theme-toggle:hover { color: var(--accent); border-color: var(--accent); background: var(--accent-dim); }
+    #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
+
     #hamburger {
       display: none;
       background: none;
       border: 1px solid var(--border);
       color: var(--text-secondary);
-      width: 36px;
-      height: 36px;
+      width: 34px; height: 34px;
       border-radius: 6px;
       cursor: pointer;
-      align-items: center;
-      justify-content: center;
-      font-size: 1rem;
+      font-size: 0.9rem;
+      align-items: center; justify-content: center;
+      flex-shrink: 0;
     }
-    /* Mobile nav drawer */
+
     #mobile-drawer {
-      display: none;
       position: fixed;
-      top: 60px;
-      left: 0;
-      right: 0;
-      background: var(--bg-nav);
+      top: 56px; right: 0;
+      width: 240px;
+      background: var(--bg-card);
+      border-left: 1px solid var(--border);
       border-bottom: 1px solid var(--border);
-      backdrop-filter: blur(8px);
-      z-index: 99;
+      padding: 1rem;
+      z-index: 999;
+      display: flex;
       flex-direction: column;
-      padding: 1rem 1.5rem 1.5rem;
-      gap: 0.75rem;
+      gap: 0.5rem;
+      transform: translateX(100%);
+      transition: transform 0.28s ease;
     }
-    #mobile-drawer.open { display: flex; }
-    #mobile-drawer a {
+    #mobile-drawer.open { transform: translateX(0); }
+
+    .mobile-link {
       color: var(--text-secondary);
       text-decoration: none;
-      font-size: 0.9rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.07em;
       text-transform: uppercase;
-      padding: 0.5rem 0;
-      border-bottom: 1px solid var(--border);
-      transition: color 0.2s;
+      padding: 0.55rem 0.75rem;
+      border-radius: 4px;
+      transition: color 0.2s ease, background 0.2s ease;
     }
-    #mobile-drawer a:hover { color: var(--accent); }
+    .mobile-link:hover { color: var(--accent); background: var(--accent-dim); }
+    .mobile-link.active { color: var(--accent); }
+
+    @media (max-width: 768px) {
+      .nav-links { display: none; }
+      #hamburger { display: flex; }
+    }
 
     /* ============================================================
-       CONTENT WRAPPER
+       SCROLL REVEAL
     ============================================================ */
-    main { position: relative; z-index: 1; }
-    section { position: relative; z-index: 1; }
+    .reveal {
+      opacity: 0;
+      transform: translateY(22px);
+      transition: opacity 0.55s ease, transform 0.55s ease;
+    }
+    .reveal.visible { opacity: 1; transform: translateY(0); }
 
     /* ============================================================
-       HERO SECTION
+       SECTION LABEL
+    ============================================================ */
+    .section-label {
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.18em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.5rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+    .section-label::after {
+      content: '';
+      display: block;
+      height: 1px;
+      width: 40px;
+      background: var(--accent);
+      opacity: 0.5;
+    }
+
+    /* ============================================================
+       TAG PILLS
+    ============================================================ */
+    .tag-pill {
+      border: 1px solid rgba(255, 103, 0, 0.4);
+      color: var(--accent);
+      font-size: 0.72rem;
+      padding: 0.2rem 0.6rem;
+      border-radius: 3px;
+      display: inline-block;
+      margin: 0.2rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+    }
+
+    /* ============================================================
+       FILE-OPEN BUTTON
+    ============================================================ */
+    .file-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--accent);
+      font-size: 0.75rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      text-decoration: none;
+      font-family: 'Courier New', monospace;
+      border: 1px solid rgba(255, 103, 0, 0.35);
+      padding: 0.45rem 0.9rem;
+      border-radius: 3px;
+      background: var(--accent-dim);
+      transition: background 0.2s ease, border-color 0.2s ease;
+      margin-top: 1.2rem;
+    }
+    .file-btn:hover { background: rgba(255, 103, 0, 0.28); border-color: var(--accent); }
+
+    /* ============================================================
+       HERO
     ============================================================ */
     #hero {
       min-height: 100vh;
       display: flex;
       flex-direction: column;
+      align-items: center;
       justify-content: center;
-      align-items: flex-start;
-      padding: 7rem 1.5rem 0;
-      max-width: 1100px;
-      margin: 0 auto;
+      text-align: center;
+      padding: 7rem 1.5rem 5rem;
       position: relative;
       overflow: hidden;
     }
-    .hero-coord {
-      font-size: 0.72rem;
-      letter-spacing: 0.12em;
-      color: var(--text-muted);
-      font-weight: 600;
-      position: absolute;
-      bottom: 14rem;
-      right: 2rem;
-      cursor: pointer;
-      transition: color 0.2s;
-      user-select: none;
-    }
-    .hero-coord:hover { color: var(--text-secondary); }
-    .trail-magic {
-      display: none;
-      color: var(--accent);
-      font-weight: 700;
-      font-size: 0.8rem;
-      letter-spacing: 0.08em;
-    }
-    .hero-tag {
-      font-size: 0.75rem;
-      letter-spacing: 0.2em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-bottom: 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .hero-tag::before {
-      content: '';
-      display: inline-block;
-      width: 28px;
-      height: 2px;
-      background: var(--accent);
-    }
+
     .hero-name {
-      font-size: clamp(3rem, 8vw, 6.5rem);
+      font-size: clamp(2.8rem, 8vw, 6.5rem);
       font-weight: 900;
-      letter-spacing: -0.02em;
+      letter-spacing: 0.06em;
       text-transform: uppercase;
       color: var(--text-primary);
-      line-height: 0.95;
+      line-height: 1.0;
       margin-bottom: 1rem;
     }
-    .hero-subtitle {
-      font-size: clamp(0.9rem, 2vw, 1.15rem);
-      font-weight: 700;
+
+    .hero-title {
+      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+      color: var(--accent);
+      font-weight: 600;
       letter-spacing: 0.08em;
       text-transform: uppercase;
-      color: var(--accent);
       margin-bottom: 0.75rem;
     }
+
     .hero-tagline {
-      font-size: clamp(0.85rem, 1.5vw, 1rem);
-      color: var(--text-secondary);
       font-style: italic;
-      font-weight: 400;
-      margin-bottom: 2.5rem;
+      font-size: clamp(0.9rem, 2vw, 1.05rem);
+      color: var(--text-secondary);
+      margin-bottom: 1.8rem;
     }
 
-    /* Mountain Ridge SVG — bottom of hero */
-    .mountain-scene {
+    #coord-btn {
+      background: none;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      font-family: 'Courier New', monospace;
+      font-size: 0.78rem;
+      color: var(--text-muted);
+      letter-spacing: 0.1em;
+      padding: 0.3rem 0.7rem;
+      border-radius: 3px;
+      transition: color 0.2s, border-color 0.2s;
+    }
+    #coord-btn:hover { color: var(--accent); border-color: var(--accent); }
+    #trail-magic { display: none; color: var(--accent); font-weight: 700; font-size: 0.85rem; }
+
+    #mountain-ridge {
       position: absolute;
-      bottom: 0;
-      left: 0;
-      right: 0;
+      bottom: 0; left: 0; right: 0;
       width: 100%;
-      height: 220px;
       pointer-events: none;
     }
 
     /* ============================================================
-       SECTION SHARED STYLES
+       STATS BAR
     ============================================================ */
-    .section-wrap {
-      max-width: 1100px;
-      margin: 0 auto;
-      padding: 5rem 1.5rem;
-    }
-    .section-label {
-      font-size: 0.7rem;
-      letter-spacing: 0.25em;
-      text-transform: uppercase;
-      color: var(--accent);
-      font-weight: 700;
-      margin-bottom: 0.5rem;
-    }
-    .section-title {
-      font-size: clamp(1.8rem, 4vw, 2.8rem);
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: -0.01em;
-      color: var(--text-primary);
-      margin-bottom: 2.5rem;
-      line-height: 1;
-    }
-    .divider {
-      width: 48px;
-      height: 3px;
-      background: var(--accent);
-      margin-bottom: 2.5rem;
+    #stats-bar {
+      background: var(--bg-secondary);
+      border-top: 2px solid var(--accent);
+      border-bottom: 1px solid var(--border);
+      padding: 1.6rem 2rem;
     }
 
-    /* Scroll-reveal */
-    .reveal {
-      opacity: 0;
-      transform: translateY(28px);
-      transition: opacity 0.65s ease, transform 0.65s ease;
+    .stats-inner {
+      max-width: 900px;
+      margin: 0 auto;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1.5rem;
     }
-    .reveal.visible {
-      opacity: 1;
-      transform: translateY(0);
+
+    .stat-item { text-align: center; }
+
+    .stat-number {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(1.6rem, 4vw, 2.4rem);
+      font-weight: 700;
+      color: var(--accent);
+      line-height: 1;
+      display: block;
     }
+
+    .stat-label {
+      font-size: 0.68rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+      margin-top: 0.3rem;
+      display: block;
+    }
+
+    .stat-divider { width: 1px; height: 40px; background: var(--border); }
+    @media (max-width: 600px) { .stat-divider { display: none; } }
 
     /* ============================================================
-       ABOUT SECTION
+       ABOUT
     ============================================================ */
-    #about { background: var(--bg-secondary); }
+    #about {
+      padding: 5rem 1.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
     .about-card {
       border-left: 3px solid var(--accent);
       background: var(--bg-card);
-      border-radius: 0 8px 8px 0;
-      padding: 2rem 2rem 2rem 1.75rem;
-      max-width: 760px;
+      border-radius: 0 6px 6px 0;
+      padding: 2rem 2.2rem;
+      margin-bottom: 1.8rem;
     }
+
     .about-card p {
       color: var(--text-secondary);
+      font-size: 0.95rem;
+      line-height: 1.75;
+      margin-bottom: 1rem;
+    }
+    .about-card p:last-child { margin-bottom: 0; }
+
+    .pull-quote {
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 1.2rem 0;
+      margin: 1.4rem 0 0;
+      font-style: italic;
       font-size: 1rem;
-      line-height: 1.8;
-      font-weight: 400;
+      color: var(--text-primary);
+      text-align: center;
     }
 
     /* ============================================================
-       SKILLS — THE TOOLKIT
+       CREDENTIALS HORIZONTAL SCROLL
     ============================================================ */
-    #skills { background: var(--bg-primary); }
-    .skills-grid {
-      display: grid;
-      grid-template-columns: 1fr;
-      gap: 1.25rem;
+    #credentials {
+      padding: 5rem 0;
+      background: var(--bg-secondary);
     }
-    @media (min-width: 640px) {
-      .skills-grid { grid-template-columns: 1fr 1fr; }
+
+    .credentials-header {
+      max-width: 860px;
+      margin: 0 auto 2rem;
+      padding: 0 1.5rem;
     }
-    @media (min-width: 1024px) {
-      .skills-grid { grid-template-columns: 1fr 1fr 1fr; }
+
+    .creds-scroll-wrap { position: relative; }
+    .creds-scroll-wrap::before,
+    .creds-scroll-wrap::after {
+      content: '';
+      position: absolute;
+      top: 0; bottom: 0;
+      width: 60px;
+      z-index: 2;
+      pointer-events: none;
     }
-    .skill-card {
+    .creds-scroll-wrap::before {
+      left: 0;
+      background: linear-gradient(to right, var(--bg-secondary), transparent);
+    }
+    .creds-scroll-wrap::after {
+      right: 0;
+      background: linear-gradient(to left, var(--bg-secondary), transparent);
+    }
+
+    .creds-scroll {
+      overflow-x: auto;
+      padding: 1rem 3rem;
+      display: flex;
+      gap: 0.75rem;
+      align-items: flex-start;
+      scrollbar-width: none;
+      -ms-overflow-style: none;
+    }
+    .creds-scroll::-webkit-scrollbar { display: none; }
+
+    .cred-badge {
+      flex-shrink: 0;
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 1.75rem;
-      transition: border-color 0.2s, box-shadow 0.2s;
-      transform-style: preserve-3d;
-      will-change: transform;
-      cursor: default;
-    }
-    .skill-card:hover {
-      border-color: rgba(255, 103, 0, 0.4);
-      box-shadow: 0 8px 32px rgba(0,0,0,0.3), 0 0 0 1px rgba(255,103,0,0.1);
-    }
-    .skill-icon {
-      color: var(--accent);
-      font-size: 1.6rem;
-      margin-bottom: 1rem;
-    }
-    .skill-title {
-      font-size: 0.9rem;
-      font-weight: 700;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
+      border: 1px solid rgba(255, 103, 0, 0.3);
+      border-radius: 6px;
+      padding: 0.65rem 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.55rem;
+      font-size: 0.78rem;
+      font-weight: 600;
       color: var(--text-primary);
+      white-space: nowrap;
+      letter-spacing: 0.04em;
+      transition: border-color 0.2s, background 0.2s;
+    }
+    .cred-badge:hover { border-color: var(--accent); background: var(--accent-dim); }
+    .cred-badge i { color: var(--accent); font-size: 0.85rem; width: 16px; text-align: center; }
+    .cred-badge.featured {
+      border-color: var(--accent);
+      background: var(--accent-dim);
+      padding: 0.8rem 1.2rem;
+      font-size: 0.82rem;
+    }
+
+    .credentials-footer {
+      max-width: 860px;
+      margin: 1.5rem auto 0;
+      padding: 0 1.5rem;
+    }
+
+    /* ============================================================
+       TOOLKIT / CAPABILITIES
+    ============================================================ */
+    #toolkit {
+      padding: 5rem 1.5rem;
+      max-width: 980px;
+      margin: 0 auto;
+    }
+
+    .toolkit-title {
+      font-size: 1.9rem;
+      font-weight: 900;
+      color: var(--text-primary);
+      margin-bottom: 2rem;
+      letter-spacing: -0.01em;
+    }
+
+    .toolkit-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1rem;
+    }
+
+    .tk-card {
+      background: var(--bg-card);
+      border-radius: 6px;
+      padding: 1.6rem;
+      transition: transform 0.15s ease;
+    }
+    .tk-card h3 {
+      font-size: 0.85rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      color: var(--text-primary);
+      margin-bottom: 0.6rem;
+    }
+    .tk-card p {
+      font-size: 0.84rem;
+      color: var(--text-secondary);
+      line-height: 1.6;
       margin-bottom: 0.75rem;
     }
-    .skill-list {
-      list-style: none;
-      padding: 0;
+
+    .tk-gis {
+      grid-column: 1 / -1;
+      border-top: 3px solid var(--accent);
+      background-image:
+        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(154,172,154,0.04) 24px, rgba(154,172,154,0.04) 25px),
+        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(154,172,154,0.04) 24px, rgba(154,172,154,0.04) 25px);
     }
-    .skill-list li {
-      font-size: 0.82rem;
-      color: var(--text-secondary);
-      padding: 0.2rem 0;
+
+    .tk-gis-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1.5rem;
+    }
+
+    .tk-medicine { border-left: 3px solid var(--accent); }
+
+    .tk-rescue { background: var(--bg-secondary); border: 1px solid var(--border); }
+
+    .tk-bar {
+      grid-column: 1 / -1;
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      border-radius: 4px;
+      padding: 1.2rem 1.6rem;
       display: flex;
       align-items: flex-start;
-      gap: 0.5rem;
     }
-    .skill-list li::before {
-      content: '›';
-      color: var(--accent);
+
+    .tk-bar-item { flex: 1; padding: 0.3rem 1.2rem; }
+    .tk-bar-item + .tk-bar-item { border-left: 1px solid var(--border); }
+
+    .tk-bar-item h4 {
+      font-size: 0.72rem;
       font-weight: 700;
-      flex-shrink: 0;
-      margin-top: 0.05rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--accent);
+      margin-bottom: 0.3rem;
+    }
+    .tk-bar-item p { font-size: 0.78rem; color: var(--text-muted); }
+
+    .toolkit-footer { margin-top: 1.8rem; }
+
+    @media (max-width: 640px) {
+      .toolkit-grid { grid-template-columns: 1fr; }
+      .tk-gis, .tk-bar { grid-column: auto; }
+      .tk-gis-inner { grid-template-columns: 1fr; }
+      .tk-bar { flex-direction: column; }
+      .tk-bar-item + .tk-bar-item { border-left: none; border-top: 1px solid var(--border); }
+    }
+
+    /* ============================================================
+       PCT CALLOUT
+    ============================================================ */
+    #pct-callout {
+      background: var(--bg-secondary);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      padding: 5rem 1.5rem;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .pct-miles {
+      font-family: 'Courier New', monospace;
+      font-size: clamp(4rem, 14vw, 9rem);
+      font-weight: 900;
+      color: var(--accent);
+      line-height: 1;
+      letter-spacing: -0.03em;
+    }
+    .pct-miles-label {
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.28em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      margin-bottom: 0.5rem;
+      display: block;
+    }
+    .pct-sub {
+      font-size: 0.88rem;
+      color: var(--text-secondary);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      margin: 0.75rem 0 1.5rem;
+    }
+
+    .pct-quote {
+      max-width: 620px;
+      margin: 0 auto 1.5rem;
+      font-size: 0.92rem;
+      line-height: 1.7;
+      color: var(--text-secondary);
+      font-style: italic;
+      border-left: 3px solid rgba(255,103,0,0.4);
+      padding-left: 1.2rem;
+      text-align: left;
+    }
+
+    #trail-wave {
+      position: absolute;
+      bottom: 0; left: 0; right: 0;
+      opacity: 0.07;
+      pointer-events: none;
     }
 
     /* ============================================================
        TRUCK EASTER EGG
     ============================================================ */
     #truck-easter-egg {
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      padding: 1.5rem 0;
-      position: relative;
-      z-index: 1;
+      max-width: 420px;
+      margin: 3rem auto;
+      padding: 0 1.5rem;
       opacity: 0;
-      transition: opacity 0.8s ease;
+      transform: translateX(-40px);
+      transition: opacity 0.8s ease, transform 0.8s ease;
     }
-    #truck-easter-egg.in-view { opacity: 0.2; }
-    #truck-easter-egg svg {
-      width: min(480px, 88vw);
-    }
+    #truck-easter-egg.in-view { opacity: 0.18; transform: translateX(0); }
 
     /* ============================================================
-       EDUCATION SECTION
+       EDUCATION
     ============================================================ */
-    #education { background: var(--bg-secondary); }
+    #education {
+      padding: 5rem 1.5rem;
+      max-width: 860px;
+      margin: 0 auto;
+    }
+
     .edu-card {
       background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 2rem 2.25rem;
-      max-width: 600px;
+      border-top: 3px solid var(--accent);
+      border-radius: 0 0 6px 6px;
+      padding: 2rem 2.2rem;
+    }
+
+    .edu-card-header {
       display: flex;
       align-items: flex-start;
-      gap: 1.5rem;
+      gap: 1.2rem;
+      margin-bottom: 1.5rem;
     }
+
     .edu-icon {
+      width: 44px; height: 44px;
+      background: var(--accent-dim);
+      border: 1px solid rgba(255,103,0,0.3);
+      border-radius: 8px;
+      display: flex; align-items: center; justify-content: center;
       color: var(--accent);
-      font-size: 2rem;
+      font-size: 1.1rem;
       flex-shrink: 0;
-      margin-top: 0.1rem;
+      margin-top: 2px;
     }
+
     .edu-school {
-      font-size: 1.05rem;
-      font-weight: 700;
-      letter-spacing: 0.04em;
-      text-transform: uppercase;
+      font-size: 1.2rem;
+      font-weight: 900;
       color: var(--text-primary);
-      margin-bottom: 0.3rem;
+      letter-spacing: -0.01em;
     }
-    .edu-degree {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      margin-bottom: 0.25rem;
+    .edu-degree { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
+    .edu-conc   { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.1rem; }
+
+    .edu-rows {
+      display: flex;
+      flex-direction: column;
+      gap: 0.85rem;
+      border-top: 1px solid var(--border);
+      padding-top: 1.2rem;
     }
-    .edu-conc {
-      font-size: 0.78rem;
-      color: var(--accent);
-      font-weight: 600;
+
+    .edu-row { display: flex; gap: 1rem; font-size: 0.82rem; }
+
+    .edu-row-label {
+      width: 130px;
+      flex-shrink: 0;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-bottom: 0.25rem;
-    }
-    .edu-year {
-      font-size: 0.75rem;
       color: var(--text-muted);
-      font-weight: 600;
+      padding-top: 0.15rem;
+    }
+
+    .edu-row-content { color: var(--text-secondary); line-height: 1.55; }
+
+    .edu-coords {
+      margin-top: 1.4rem;
+      font-family: 'Courier New', monospace;
+      font-size: 0.72rem;
+      color: var(--text-muted);
       letter-spacing: 0.1em;
     }
 
@@ -551,368 +794,569 @@
        FOOTER
     ============================================================ */
     footer {
-      background: var(--bg-primary);
+      background: var(--bg-secondary);
       border-top: 1px solid var(--border);
       padding: 3rem 1.5rem 2rem;
-      position: relative;
-      z-index: 1;
     }
+
     .footer-inner {
-      max-width: 1100px;
+      max-width: 860px;
       margin: 0 auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 1.5rem;
       text-align: center;
     }
-    /* Radar ping status */
+
     .status-wrap {
       display: flex;
       align-items: center;
-      gap: 1rem;
+      justify-content: center;
+      gap: 0.75rem;
+      margin-bottom: 1.5rem;
     }
-    .radar-ping {
-      position: relative;
-      width: 18px;
-      height: 18px;
-      flex-shrink: 0;
-    }
+
+    .radar-ping { position: relative; width: 22px; height: 22px; flex-shrink: 0; }
     .radar-dot {
       position: absolute;
-      inset: 50%;
-      transform: translate(-50%, -50%);
-      width: 8px;
-      height: 8px;
+      top: 50%; left: 50%;
+      width: 7px; height: 7px;
       background: var(--accent);
       border-radius: 50%;
+      transform: translate(-50%, -50%);
     }
     .radar-wave {
       position: absolute;
-      inset: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      width: 18px;
-      height: 18px;
-      border: 2px solid var(--accent);
+      top: 50%; left: 50%;
+      border: 1.5px solid var(--accent);
       border-radius: 50%;
-      opacity: 0;
-      animation: radarPing 2.4s ease-out infinite;
+      transform: translate(-50%, -50%) scale(0);
+      animation: radar-pulse 2.4s ease-out infinite;
     }
-    .radar-wave:nth-child(3) { animation-delay: 0.8s; }
-    .radar-wave:nth-child(4) { animation-delay: 1.6s; }
-    @keyframes radarPing {
-      0%   { transform: translate(-50%,-50%) scale(0.3); opacity: 0.9; }
-      100% { transform: translate(-50%,-50%) scale(3.2); opacity: 0; }
+    .radar-wave:nth-child(2) { animation-delay: 0.8s; }
+    .radar-wave:nth-child(3) { animation-delay: 1.6s; }
+
+    @keyframes radar-pulse {
+      0%   { width: 7px;  height: 7px;  opacity: 0.9; transform: translate(-50%, -50%) scale(0); }
+      100% { width: 44px; height: 44px; opacity: 0;   transform: translate(-50%, -50%) scale(1); }
     }
+
     .status-text {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 700;
-      letter-spacing: 0.2em;
+      letter-spacing: 0.18em;
       text-transform: uppercase;
       color: var(--accent);
-      animation: statusPulse 2.4s ease-in-out infinite;
     }
-    @keyframes statusPulse {
-      0%, 100% { opacity: 1; }
-      50% { opacity: 0.65; }
-    }
+
     .footer-links {
       display: flex;
       align-items: center;
-      gap: 1.25rem;
-      flex-wrap: wrap;
       justify-content: center;
+      gap: 1rem;
+      margin-bottom: 1.2rem;
+      flex-wrap: wrap;
     }
+
     .footer-btn {
       display: inline-flex;
       align-items: center;
-      gap: 0.5rem;
-      background: var(--accent);
-      color: #fff;
-      text-decoration: none;
-      font-size: 0.8rem;
+      gap: 0.4rem;
+      background: var(--accent-dim);
+      border: 1px solid rgba(255,103,0,0.4);
+      color: var(--accent);
+      font-size: 0.78rem;
       font-weight: 700;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      padding: 0.6rem 1.25rem;
+      text-decoration: none;
+      padding: 0.45rem 1rem;
       border-radius: 4px;
-      transition: background 0.2s, transform 0.15s;
+      transition: background 0.2s ease;
     }
-    .footer-btn:hover { background: #e05a00; transform: translateY(-1px); }
+    .footer-btn:hover { background: rgba(255, 103, 0, 0.28); }
+
     .footer-email {
-      font-size: 0.82rem;
       color: var(--text-muted);
       text-decoration: none;
-      transition: color 0.2s;
+      font-size: 0.8rem;
+      font-family: 'Courier New', monospace;
+      letter-spacing: 0.04em;
+      transition: color 0.2s ease;
     }
     .footer-email:hover { color: var(--accent); }
-    .footer-copy {
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      letter-spacing: 0.08em;
-    }
-    .footer-trail {
-      font-size: 0.68rem;
-      color: var(--text-muted);
-      letter-spacing: 0.12em;
-      opacity: 0.6;
-    }
 
-    /* ============================================================
-       RESPONSIVE OVERRIDES
-    ============================================================ */
-    @media (max-width: 767px) {
-      #nav-links { display: none; }
-      #hamburger { display: flex; }
-      .hero-coord { bottom: 13rem; right: 1rem; }
+    .footer-copy  { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.3rem; }
+    .footer-trail { font-size: 0.72rem; color: var(--text-muted); font-family: 'Courier New', monospace; letter-spacing: 0.06em; margin-bottom: 1.2rem; }
+
+    .footer-nav { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
+    .footer-nav a {
+      color: var(--text-muted);
+      text-decoration: none;
+      font-size: 0.72rem;
+      font-weight: 600;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      transition: color 0.2s ease;
     }
+    .footer-nav a:hover { color: var(--accent); }
   </style>
 </head>
 <body>
 
   <!-- ============================================================
-       INTRO OVERLAY
+       INTRO OVERLAY — Radar Pulse Reveal
   ============================================================ -->
-  <div id="intro-overlay" aria-hidden="true">
-    <div id="drop"></div>
-    <div class="radar-ring" id="ring1"></div>
-    <div class="radar-ring" id="ring2"></div>
+  <div id="intro-overlay" role="presentation" aria-hidden="true">
+    <svg id="intro-svg" width="100" height="100" viewBox="0 0 100 100">
+      <circle id="ring1" class="ring-circle" cx="50" cy="50" r="8" />
+      <circle id="ring2" class="ring-circle" cx="50" cy="50" r="8" />
+      <g id="drop">
+        <path id="drop-shape" d="M50 30 C50 30 38 48 38 56 C38 63 43.5 68 50 68 C56.5 68 62 63 62 56 C62 48 50 30 50 30Z" />
+      </g>
+    </svg>
   </div>
 
   <!-- ============================================================
        NAVIGATION
   ============================================================ -->
-  <nav id="navbar" role="navigation" aria-label="Main navigation">
-    <div class="nav-inner">
-      <a href="#hero" id="nav-brand">H.<span>CAIRNS</span></a>
-      <div id="nav-links" role="list">
-        <a href="#about" role="listitem">About</a>
-        <a href="#skills" role="listitem">Skills</a>
-        <a href="#education" role="listitem">Education</a>
-        <a href="#contact" role="listitem">Contact</a>
-      </div>
-      <div style="display:flex;align-items:center;gap:0.6rem;">
-        <button id="hamburger" aria-label="Open menu" aria-expanded="false">
-          <i class="fa-solid fa-bars"></i>
-        </button>
-        <button id="theme-toggle" aria-label="Toggle color theme">
-          <i class="fa-solid fa-sun" id="theme-icon"></i>
-        </button>
-      </div>
+  <nav id="main-nav" role="navigation" aria-label="Main navigation">
+    <a href="index.html" class="nav-brand" aria-label="H. Cairns home">H.CAIRNS</a>
+
+    <div class="nav-links">
+      <a href="index.html"       class="nav-link active">Home</a>
+      <a href="about.html"       class="nav-link">About</a>
+      <a href="skills.html"      class="nav-link">Skills</a>
+      <a href="credentials.html" class="nav-link">Credentials</a>
+      <a href="pct.html"         class="nav-link">PCT</a>
+      <a href="#about"      class="nav-anchor">Record</a>
+      <a href="#toolkit"    class="nav-anchor">Toolkit</a>
+      <a href="#education"  class="nav-anchor">Education</a>
     </div>
+
+    <button id="theme-toggle" aria-label="Toggle light/dark mode">
+      <i id="theme-icon" class="fa-solid fa-sun"></i>
+    </button>
+
+    <button id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
+      <i class="fa-solid fa-bars"></i>
+    </button>
   </nav>
 
   <!-- Mobile Drawer -->
-  <div id="mobile-drawer" role="navigation" aria-label="Mobile navigation">
-    <a href="#about" class="mobile-link">About</a>
-    <a href="#skills" class="mobile-link">Skills</a>
-    <a href="#education" class="mobile-link">Education</a>
-    <a href="#contact" class="mobile-link">Contact</a>
+  <div id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
+    <a href="index.html"       class="mobile-link active">Home</a>
+    <a href="about.html"       class="mobile-link">About</a>
+    <a href="skills.html"      class="mobile-link">Skills</a>
+    <a href="credentials.html" class="mobile-link">Credentials</a>
+    <a href="pct.html"         class="mobile-link">PCT</a>
+    <a href="#about"     class="mobile-link" style="color:var(--text-muted);font-size:0.72rem;">&#8594; Personnel Record</a>
+    <a href="#toolkit"   class="mobile-link" style="color:var(--text-muted);font-size:0.72rem;">&#8594; Capabilities</a>
+    <a href="#education" class="mobile-link" style="color:var(--text-muted);font-size:0.72rem;">&#8594; Education</a>
   </div>
 
-  <main>
-    <!-- ============================================================
-         HERO SECTION
-    ============================================================ -->
-    <section id="hero">
-      <div class="hero-tag">Emergency Management Contractor</div>
-      <h1 class="hero-name">Hamish<br>Cairns</h1>
-      <p class="hero-subtitle">Wilderness Medic &amp; Emergency Management Specialist</p>
-      <p class="hero-tagline">"Mapping the Chaos. Guarding the Trail."</p>
+  <!-- ============================================================
+       MAIN CONTENT
+  ============================================================ -->
+  <main id="main-content">
 
-      <!-- Coordinates Easter Egg -->
-      <div class="hero-coord" id="coord-btn" aria-label="Location coordinates, click for easter egg">
-        <span id="coord-text">44.5646° N, 123.2620° W</span>
-        <span class="trail-magic" id="trail-magic">TRAIL MAGIC ✨</span>
+    <!-- ===================================================
+         SECTION 1: HERO
+    =================================================== -->
+    <section id="hero" aria-label="Hero introduction">
+
+      <div class="reveal">
+        <h1 class="hero-name">Hamish Cairns</h1>
+        <p class="hero-title">Wilderness Medic &amp; Emergency Management Specialist</p>
+        <p class="hero-tagline">&#8220;Mapping the Chaos. Guarding the Trail.&#8221;</p>
+
+        <button id="coord-btn" aria-label="Click for a surprise">
+          <span id="coord-text">44.5646&#176; N, 123.2620&#176; W</span>
+          <span id="trail-magic">TRAIL MAGIC &#10024;</span>
+        </button>
       </div>
 
-      <!-- CSS Mountain Silhouette -->
-      <div class="mountain-scene" aria-hidden="true">
-        <svg viewBox="0 0 1440 220" preserveAspectRatio="none" xmlns="http://www.w3.org/2000/svg" width="100%" height="100%">
-          <!-- Back ridge — darkest -->
-          <polygon points="0,220 0,150 80,120 160,90 230,110 320,60 400,85 480,50 560,75 640,40 720,65 800,35 880,55 960,30 1040,55 1120,80 1200,60 1280,90 1360,110 1440,95 1440,220" fill="rgba(15,26,15,0.55)"/>
-          <!-- Mid ridge -->
-          <polygon points="0,220 0,170 100,145 200,130 300,115 380,125 460,100 540,115 620,95 700,108 780,90 860,105 940,88 1020,100 1100,120 1180,105 1260,125 1340,140 1440,130 1440,220" fill="rgba(15,26,15,0.75)"/>
-          <!-- Front ridge — most prominent -->
-          <polygon points="0,220 0,185 120,172 240,158 340,165 440,145 520,158 620,140 700,152 780,140 860,155 960,138 1060,150 1160,158 1260,162 1360,170 1440,165 1440,220" fill="var(--bg-primary)"/>
-        </svg>
+      <!-- Mountain ridge SVG silhouette — 3 polygon layers -->
+      <svg id="mountain-ridge" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
+        <polygon
+          points="0,160 0,120 60,105 120,115 200,85 280,100 360,70 440,90 520,55 600,80 680,45 760,72 840,38 920,65 1000,30 1080,58 1160,22 1240,50 1320,18 1380,42 1440,28 1440,160"
+          fill="rgba(15,26,15,0.9)" />
+        <polygon
+          points="0,160 0,135 80,120 160,130 240,105 340,118 440,92 520,108 620,78 700,95 800,62 880,82 980,48 1060,70 1160,38 1240,62 1340,30 1440,55 1440,160"
+          fill="rgba(22,35,22,0.95)" />
+        <polygon
+          points="0,160 0,148 100,138 200,148 300,128 400,142 500,120 600,136 700,112 800,130 900,108 1000,126 1100,100 1200,120 1300,105 1440,125 1440,160"
+          fill="var(--bg-primary)" />
+      </svg>
+    </section>
+
+    <!-- ===================================================
+         SECTION 2: STATS BAR
+    =================================================== -->
+    <section id="stats-bar" aria-label="Key statistics">
+      <div class="stats-inner reveal">
+        <div class="stat-item">
+          <span class="stat-number">2,650</span>
+          <span class="stat-label">Miles Hiked (PCT)</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-number">6</span>
+          <span class="stat-label">Months in the Field</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-number">13+</span>
+          <span class="stat-label">Certifications</span>
+        </div>
+        <div class="stat-divider" aria-hidden="true"></div>
+        <div class="stat-item">
+          <span class="stat-number">3+</span>
+          <span class="stat-label">Yrs Field Ops</span>
+        </div>
       </div>
     </section>
 
-    <!-- ============================================================
-         ABOUT SECTION
-    ============================================================ -->
-    <section id="about">
-      <div class="section-wrap">
-        <div class="section-label">01 / Personnel Record</div>
-        <h2 class="section-title reveal">About</h2>
-        <div class="divider"></div>
-        <div class="about-card reveal">
+    <!-- ===================================================
+         SECTION 3: ABOUT — 01 / PERSONNEL RECORD
+    =================================================== -->
+    <section id="about" aria-labelledby="about-heading">
+      <div class="section-label reveal">01 / Personnel Record</div>
+      <h2 id="about-heading" class="reveal" style="font-size:1.9rem;font-weight:900;color:var(--text-primary);margin-bottom:1.5rem;letter-spacing:-0.01em;">
+        About
+      </h2>
+
+      <div class="about-card reveal">
+        <p>
+          Emergency management contractor and backcountry emergency responder with Oregon State Parks.
+          Built on 2,650 miles of trail discipline from a Pacific Crest Trail thru-hike and a foundation
+          in natural resource science &#8212; the kind of background that doesn&#8217;t come from a
+          classroom alone.
+        </p>
+        <p>
+          Trained in technical rescue, wilderness medicine, and spatial intelligence. Certified EMT,
+          Wilderness First Responder, licensed HAM radio operator, and GIS specialist. Operates where
+          cell service ends and the work begins &#8212; whether that&#8217;s a high-angle extraction,
+          a multi-agency incident, or mapping a wildfire perimeter from a drone feed.
+        </p>
+        <p>
+          Currently pursuing a B.S. in Natural Resources at Oregon State University with an Environmental
+          Disaster Management focus, expected graduation 2035. Coursework applied directly to the field,
+          not the other way around.
+        </p>
+
+        <blockquote class="pull-quote">
+          &#8220;Built for the terrain between the last cell tower and the trailhead.&#8221;
+        </blockquote>
+      </div>
+
+      <a href="about.html" class="file-btn reveal">
+        <i class="fa-solid fa-folder-open"></i> Open Full Brief &#8594;
+      </a>
+    </section>
+
+    <!-- ===================================================
+         SECTION 4: CREDENTIALS — 02 / QUALIFICATIONS
+    =================================================== -->
+    <section id="credentials" aria-labelledby="creds-heading">
+      <div class="credentials-header">
+        <div class="section-label reveal">02 / Qualifications</div>
+        <h2 id="creds-heading" class="reveal" style="font-size:1.9rem;font-weight:900;color:var(--text-primary);letter-spacing:-0.01em;">
+          Credentials
+        </h2>
+      </div>
+
+      <div class="creds-scroll-wrap reveal">
+        <div class="creds-scroll" role="list" aria-label="Credentials list">
+
+          <div class="cred-badge featured" role="listitem">
+            <i class="fa-solid fa-star-of-life"></i> EMT-Basic
+          </div>
+          <div class="cred-badge featured" role="listitem">
+            <i class="fa-solid fa-star-of-life"></i> EMT-Advanced
+          </div>
+          <div class="cred-badge featured" role="listitem">
+            <i class="fa-solid fa-briefcase-medical"></i> WFR &#8212; Wilderness First Responder
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-kit-medical"></i> WFA &#8212; Wilderness First Aid
+          </div>
+          <div class="cred-badge featured" role="listitem">
+            <i class="fa-solid fa-tower-broadcast"></i> HAM Radio License
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-map"></i> GIS Certification
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-shield-halved"></i> Disaster Response &amp; Mgmt
+          </div>
+          <div class="cred-badge featured" role="listitem">
+            <i class="fa-solid fa-rope"></i> Technical Rescue Cert
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-person-falling-burst"></i> Rope / High-Angle Rescue
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-water"></i> Whitewater Rescue
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-heart-pulse"></i> Extended ELS
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-mountain"></i> Rock Climbing
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-wrench"></i> Engine Repair / Mechanics
+          </div>
+          <div class="cred-badge" role="listitem">
+            <i class="fa-solid fa-fire"></i> Wildfire &amp; Forestry
+          </div>
+
+        </div>
+      </div>
+
+      <div class="credentials-footer reveal">
+        <a href="credentials.html" class="file-btn">
+          <i class="fa-solid fa-folder-open"></i> View Full Record &#8594;
+        </a>
+      </div>
+    </section>
+
+    <!-- ===================================================
+         SECTION 5: TOOLKIT — 03 / CAPABILITIES (asymmetric)
+    =================================================== -->
+    <section id="toolkit" aria-labelledby="toolkit-heading">
+      <div class="section-label reveal">03 / Capabilities</div>
+      <h2 id="toolkit-heading" class="toolkit-title reveal">The Toolkit</h2>
+
+      <div class="toolkit-grid reveal">
+
+        <!-- GIS Featured Card — full width, data-grid overlay -->
+        <div class="tk-card tk-gis" data-tilt>
+          <div class="tk-gis-inner">
+            <div>
+              <h3>
+                <i class="fa-solid fa-map" style="color:var(--accent);margin-right:0.5rem;"></i>
+                GIS &amp; Spatial Intelligence
+              </h3>
+              <p>
+                Full-stack geospatial operator &#8212; from aerial acquisition to publishable map products.
+                Drone-based photogrammetry for incident mapping, terrain modeling, and search-area
+                prioritization. Builds offline-capable GIS packages for field deployment where
+                connectivity is unavailable. Integrates with ICS structure for real-time operational maps.
+              </p>
+              <div>
+                <span class="tag-pill">ArcGIS Pro</span>
+                <span class="tag-pill">QGIS</span>
+                <span class="tag-pill">Pix4D</span>
+                <span class="tag-pill">Drone2Map</span>
+                <span class="tag-pill">Field Maps</span>
+                <span class="tag-pill">Survey123</span>
+              </div>
+            </div>
+            <div>
+              <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:4px;padding:1rem;font-family:'Courier New',monospace;font-size:0.72rem;color:var(--text-muted);line-height:1.7;">
+                <div style="color:var(--accent);margin-bottom:0.4rem;">&#9658; SPATIAL_OPS.log</div>
+                <div>DRONE_SURVEY ........ ACTIVE</div>
+                <div>TERRAIN_MODEL ....... RENDERED</div>
+                <div>OFFLINE_PACKAGE ..... DEPLOYED</div>
+                <div>COORDINATE_SYS ...... WGS84</div>
+                <div>DATUM ............... NAD83</div>
+                <div style="color:var(--accent);margin-top:0.4rem;">STATUS .............. FIELD READY</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Wilderness Medicine Card -->
+        <div class="tk-card tk-medicine" data-tilt>
+          <h3>
+            <i class="fa-solid fa-briefcase-medical" style="color:var(--accent);margin-right:0.5rem;"></i>
+            Wilderness Medicine
+          </h3>
           <p>
-            Emergency management contractor and backcountry emergency responder with Oregon State Parks.
-            Built on 2,650 miles of trail discipline from a Pacific Crest Trail thru-hike and a foundation
-            in natural resource science. Trained in technical rescue, wilderness medicine, and spatial
-            intelligence. Operates where cell service ends and the work begins.
+            Dual-certified EMT with Wilderness First Responder credentials. Trained in prolonged
+            field care, remote patient assessment, and managing emergencies where ALS backup is
+            hours away. Oregon State Parks primary field responder.
           </p>
+          <div>
+            <span class="tag-pill">WFR</span>
+            <span class="tag-pill">EMT-B</span>
+            <span class="tag-pill">EMT-A</span>
+            <span class="tag-pill">Extended ELS</span>
+            <span class="tag-pill">WFA</span>
+          </div>
         </div>
+
+        <!-- Technical Rescue Card -->
+        <div class="tk-card tk-rescue" data-tilt>
+          <h3>
+            <i class="fa-solid fa-rope" style="color:var(--accent);margin-right:0.5rem;"></i>
+            Technical Rescue
+          </h3>
+          <p>
+            Rope and high-angle rescue operations, swiftwater technician, rock climbing safety
+            anchor systems. OSU ALI program graduate. Integrates rescue skills with medical
+            response for packaged-patient extractions in technical terrain.
+          </p>
+          <div>
+            <span class="tag-pill">High-Angle</span>
+            <span class="tag-pill">Swiftwater</span>
+            <span class="tag-pill">OSU ALI</span>
+            <span class="tag-pill">Rock Climbing</span>
+          </div>
+        </div>
+
+        <!-- Full-width horizontal capability bar -->
+        <div class="tk-bar">
+          <div class="tk-bar-item">
+            <h4><i class="fa-solid fa-tower-broadcast" style="font-size:0.65rem;margin-right:0.3rem;"></i>Communications</h4>
+            <p>Licensed HAM operator. Satellite comms integration for off-grid incident command.</p>
+            <div style="margin-top:0.4rem;">
+              <span class="tag-pill">HAM Radio</span>
+              <span class="tag-pill">Satellite Comms</span>
+            </div>
+          </div>
+          <div class="tk-bar-item">
+            <h4><i class="fa-solid fa-shield-halved" style="font-size:0.65rem;margin-right:0.3rem;"></i>Emergency Management</h4>
+            <p>ICS/NIMS compliant. Multi-agency coordination and disaster response operations.</p>
+            <div style="margin-top:0.4rem;">
+              <span class="tag-pill">ICS/NIMS</span>
+              <span class="tag-pill">Multi-Agency</span>
+            </div>
+          </div>
+          <div class="tk-bar-item">
+            <h4><i class="fa-solid fa-truck" style="font-size:0.65rem;margin-right:0.3rem;"></i>Field Mobility</h4>
+            <p>Overland operations. Garmin Tread navigator. Backcountry vehicle recovery trained.</p>
+            <div style="margin-top:0.4rem;">
+              <span class="tag-pill">Garmin Tread</span>
+              <span class="tag-pill">Overland Ops</span>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <div class="toolkit-footer reveal">
+        <a href="skills.html" class="file-btn">
+          <i class="fa-solid fa-folder-open"></i> Full Capability Breakdown &#8594;
+        </a>
       </div>
     </section>
 
-    <!-- ============================================================
-         SKILLS — THE TOOLKIT
-    ============================================================ -->
-    <section id="skills">
-      <div class="section-wrap">
-        <div class="section-label">02 / Capabilities</div>
-        <h2 class="section-title reveal">The Toolkit</h2>
-        <div class="divider"></div>
-        <div class="skills-grid">
-
-          <!-- Card 1: GIS -->
-          <div class="skill-card reveal" data-tilt>
-            <div class="skill-icon"><i class="fa-solid fa-map-location-dot"></i></div>
-            <div class="skill-title">GIS &amp; Spatial Intel</div>
-            <ul class="skill-list">
-              <li>Drone mapping &amp; aerial survey</li>
-              <li>Predictive disaster modeling</li>
-              <li>ArcGIS &amp; field data collection</li>
-            </ul>
-          </div>
-
-          <!-- Card 2: Wilderness Medicine -->
-          <div class="skill-card reveal" data-tilt>
-            <div class="skill-icon"><i class="fa-solid fa-kit-medical"></i></div>
-            <div class="skill-title">Wilderness Medicine</div>
-            <ul class="skill-list">
-              <li>Wilderness First Responder (WFR)</li>
-              <li>US EMT-B Certified</li>
-              <li>Backcountry patient care &amp; evacuation</li>
-            </ul>
-          </div>
-
-          <!-- Card 3: Technical Rescue -->
-          <div class="skill-card reveal" data-tilt>
-            <div class="skill-icon"><i class="fa-solid fa-mountain"></i></div>
-            <div class="skill-title">Technical Rescue</div>
-            <ul class="skill-list">
-              <li>High-angle rope rescue</li>
-              <li>Swiftwater rescue</li>
-              <li>Snow &amp; avalanche rescue</li>
-              <li>OSU ALI Certified</li>
-            </ul>
-          </div>
-
-          <!-- Card 4: Communications -->
-          <div class="skill-card reveal" data-tilt>
-            <div class="skill-icon"><i class="fa-solid fa-tower-broadcast"></i></div>
-            <div class="skill-title">Communications</div>
-            <ul class="skill-list">
-              <li>Licensed HAM Radio Operator</li>
-              <li>Satellite communications</li>
-              <li>Field comms coordination</li>
-            </ul>
-          </div>
-
-          <!-- Card 5: Emergency Management -->
-          <div class="skill-card reveal" data-tilt>
-            <div class="skill-icon"><i class="fa-solid fa-shield-halved"></i></div>
-            <div class="skill-title">Emergency Management</div>
-            <ul class="skill-list">
-              <li>Incident Command System (ICS)</li>
-              <li>Multi-agency coordination</li>
-              <li>Resource deployment &amp; logistics</li>
-            </ul>
-          </div>
-
-          <!-- Card 6: Field Mobility -->
-          <div class="skill-card reveal" data-tilt>
-            <div class="skill-icon"><i class="fa-solid fa-truck-monster"></i></div>
-            <div class="skill-title">Field Mobility</div>
-            <ul class="skill-list">
-              <li>Mobile command capability</li>
-              <li>Garmin Tread navigation</li>
-              <li>Remote access &amp; overland ops</li>
-            </ul>
-          </div>
-
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================================================
+    <!-- ===================================================
          TRUCK EASTER EGG
-    ============================================================ -->
+    =================================================== -->
     <div id="truck-easter-egg" aria-hidden="true">
-      <!--
-        F-150 wireframe outline — side profile, SAR orange stroke, no fill.
-        Keep it subtle: opacity 0.12-0.2 max, handled via JS scroll.
-      -->
-      <svg viewBox="0 0 520 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <g stroke="#FF6700" stroke-width="1.4" stroke-linejoin="round" stroke-linecap="round">
-          <!-- Body outline -->
-          <path d="M60,130 L60,80 L80,58 L180,50 L240,50 L300,58 L380,60 L420,70 L440,80 L450,100 L450,130"/>
-          <!-- Cab roof -->
-          <path d="M80,58 Q100,40 140,38 L240,38 L270,50"/>
-          <!-- Windshield -->
-          <path d="M100,58 L120,40 L200,40 L220,58"/>
-          <!-- Rear window -->
-          <path d="M240,50 L255,40 L270,40 L280,50"/>
-          <!-- Bed sides -->
-          <path d="M300,60 L300,130"/>
-          <!-- Wheel arches -->
-          <path d="M100,130 A36,20 0 0,0 172,130"/>
-          <path d="M330,130 A36,20 0 0,0 402,130"/>
-          <!-- Wheels -->
-          <circle cx="136" cy="136" r="22"/>
-          <circle cx="136" cy="136" r="10"/>
-          <circle cx="366" cy="136" r="22"/>
-          <circle cx="366" cy="136" r="10"/>
-          <!-- Bumpers -->
-          <path d="M55,105 L55,125 L62,130"/>
-          <path d="M450,110 L455,125 L448,130"/>
-          <!-- Running board -->
-          <path d="M62,115 L300,115"/>
-          <!-- Door line -->
-          <path d="M160,58 L160,115"/>
-          <!-- Hood line -->
-          <path d="M80,60 L80,115"/>
-          <!-- Mirrors -->
-          <path d="M105,55 L95,52 L93,58"/>
-          <!-- Headlight -->
-          <rect x="58" y="88" width="14" height="10" rx="2"/>
-          <!-- Tail light -->
-          <rect x="438" y="90" width="12" height="10" rx="2"/>
-        </g>
+      <svg viewBox="0 0 420 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <rect x="10" y="80" width="400" height="60" rx="6" stroke="#FF6700" stroke-width="1.2" fill="none"/>
+        <path d="M10 80 L80 80 L80 40 L220 40 L280 80 L400 80" stroke="#FF6700" stroke-width="1.2" fill="none"/>
+        <path d="M80 40 L100 40 L100 80" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <circle cx="90"  cy="148" r="28" stroke="#FF6700" stroke-width="1.2" fill="none"/>
+        <circle cx="90"  cy="148" r="14" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <circle cx="330" cy="148" r="28" stroke="#FF6700" stroke-width="1.2" fill="none"/>
+        <circle cx="330" cy="148" r="14" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.5"/>
+        <rect x="300" y="50" width="100" height="30" rx="2" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.4"/>
+        <line x1="10" y1="120" x2="400" y2="120" stroke="#FF6700" stroke-width="0.6" opacity="0.3"/>
+        <text x="210" y="175" fill="#FF6700" font-size="9" text-anchor="middle" opacity="0.6" font-family="Courier New, monospace" letter-spacing="3">F-150 RAPTOR &#183; FIELD OPS</text>
       </svg>
     </div>
 
-    <!-- ============================================================
-         EDUCATION SECTION
-    ============================================================ -->
-    <section id="education">
-      <div class="section-wrap">
-        <div class="section-label">03 / Academic Record</div>
-        <h2 class="section-title reveal">Education</h2>
-        <div class="divider"></div>
-        <div class="edu-card reveal">
-          <div class="edu-icon"><i class="fa-solid fa-graduation-cap"></i></div>
+    <!-- ===================================================
+         SECTION 6: PCT CALLOUT
+    =================================================== -->
+    <section id="pct-callout" aria-labelledby="pct-heading">
+      <div class="reveal">
+        <span class="pct-miles-label">Pacific Crest Trail</span>
+        <div class="pct-miles" id="pct-heading">2,650</div>
+        <p class="pct-sub">Mexico to Canada &nbsp;&#183;&nbsp; Pacific Crest Trail &nbsp;&#183;&nbsp; 6 Months</p>
+
+        <blockquote class="pct-quote">
+          Six months of self-reliance, field discipline, and decision-making in terrain that doesn&#8217;t
+          forgive mistakes. The PCT isn&#8217;t a r&#233;sum&#233; line &#8212; it&#8217;s the foundation
+          everything else is built on.
+        </blockquote>
+
+        <a href="pct.html" class="file-btn">
+          <i class="fa-solid fa-folder-open"></i> Read the Full Story &#8594;
+        </a>
+      </div>
+
+      <!-- Wavy trail SVG background hint -->
+      <svg id="trail-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M0,40 C120,10 240,70 360,40 C480,10 600,70 720,40 C840,10 960,70 1080,40 C1200,10 1320,70 1440,40"
+              stroke="#FF6700" stroke-width="3" fill="none"/>
+      </svg>
+    </section>
+
+    <!-- ===================================================
+         SECTION 7: EDUCATION — 04 / ACADEMIC RECORD
+    =================================================== -->
+    <section id="education" aria-labelledby="edu-heading">
+      <div class="section-label reveal">04 / Academic Record</div>
+      <h2 id="edu-heading" class="reveal" style="font-size:1.9rem;font-weight:900;color:var(--text-primary);margin-bottom:1.5rem;letter-spacing:-0.01em;">
+        Education
+      </h2>
+
+      <div class="edu-card reveal">
+        <div class="edu-card-header">
+          <div class="edu-icon" aria-hidden="true">
+            <i class="fa-solid fa-graduation-cap"></i>
+          </div>
           <div>
             <div class="edu-school">Oregon State University</div>
             <div class="edu-degree">B.S. in Natural Resources</div>
             <div class="edu-conc">Environmental Disaster Management</div>
-            <div class="edu-year">Class of 2035 &nbsp;·&nbsp; 44.5646° N, 123.2620° W</div>
           </div>
+        </div>
+
+        <div class="edu-rows">
+          <div class="edu-row">
+            <div class="edu-row-label">Expected</div>
+            <div class="edu-row-content">Class of 2035</div>
+          </div>
+          <div class="edu-row">
+            <div class="edu-row-label">Location</div>
+            <div class="edu-row-content">Corvallis, OR</div>
+          </div>
+          <div class="edu-row">
+            <div class="edu-row-label">Coursework</div>
+            <div class="edu-row-content">
+              <span class="tag-pill">Disaster Response</span>
+              <span class="tag-pill">GIS Applications</span>
+              <span class="tag-pill">Wildfire Ecology</span>
+              <span class="tag-pill">Natural Resource Mgmt</span>
+              <span class="tag-pill">Emergency Planning</span>
+            </div>
+          </div>
+          <div class="edu-row">
+            <div class="edu-row-label">Activities</div>
+            <div class="edu-row-content">
+              ALI Technical Rescue Program &nbsp;&#183;&nbsp; Campus First Responder
+            </div>
+          </div>
+          <div class="edu-row">
+            <div class="edu-row-label">Note</div>
+            <div class="edu-row-content" style="color:var(--text-muted);">
+              Disaster response certification is earned separately from the degree &#8212; applied field
+              credentials that exist independent of academic timeline.
+            </div>
+          </div>
+        </div>
+
+        <div class="edu-coords">
+          44.5646&#176; N, 123.2620&#176; W &nbsp;&#183;&nbsp; Corvallis, Oregon
         </div>
       </div>
     </section>
 
-    <!-- Contact anchor — links to footer -->
+    <!-- Contact anchor -->
     <div id="contact" style="height:0;overflow:hidden;" aria-hidden="true"></div>
+
   </main>
 
-  <footer>
+  <!-- ============================================================
+       FOOTER
+  ============================================================ -->
+  <footer role="contentinfo">
     <div class="footer-inner">
-      <!-- STATUS: FIELD READY with radar ping -->
       <div class="status-wrap">
         <div class="radar-ping" aria-hidden="true">
           <div class="radar-dot"></div>
@@ -923,7 +1367,6 @@
         <span class="status-text">Status: Field Ready</span>
       </div>
 
-      <!-- Links -->
       <div class="footer-links">
         <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-btn">
           <i class="fa-brands fa-linkedin"></i> LinkedIn
@@ -934,7 +1377,14 @@
       </div>
 
       <p class="footer-copy">&copy; 2038 H. Cairns</p>
-      <p class="footer-trail">2,650 mi &nbsp;·&nbsp; Campo to Manning Park &nbsp;·&nbsp; PCT</p>
+      <p class="footer-trail">2,650 mi &nbsp;&#183;&nbsp; Campo to Manning Park &nbsp;&#183;&nbsp; PCT</p>
+
+      <nav class="footer-nav" aria-label="Footer navigation">
+        <a href="about.html">About</a>
+        <a href="skills.html">Skills</a>
+        <a href="credentials.html">Credentials</a>
+        <a href="pct.html">PCT</a>
+      </nav>
     </div>
   </footer>
 
@@ -949,24 +1399,19 @@
     ---------------------------------------------------------- */
     (function () {
       var overlay = document.getElementById('intro-overlay');
-      var drop = document.getElementById('drop');
-      var ring1 = document.getElementById('ring1');
-      var ring2 = document.getElementById('ring2');
+      var drop    = document.getElementById('drop');
+      var ring1   = document.getElementById('ring1');
+      var ring2   = document.getElementById('ring2');
 
-      // After drop falls (~0.9s) trigger rings
       setTimeout(function () {
         drop.style.opacity = '0';
         ring1.classList.add('pulse');
         ring2.classList.add('pulse');
       }, 900);
 
-      // Hide overlay after rings expand
       setTimeout(function () {
         overlay.classList.add('hide');
-        // Remove from DOM after fade
-        setTimeout(function () {
-          overlay.remove();
-        }, 700);
+        setTimeout(function () { overlay.remove(); }, 700);
       }, 2100);
     })();
 
@@ -975,7 +1420,7 @@
     ---------------------------------------------------------- */
     (function () {
       var html = document.documentElement;
-      var btn = document.getElementById('theme-toggle');
+      var btn  = document.getElementById('theme-toggle');
       var icon = document.getElementById('theme-icon');
 
       btn.addEventListener('click', function () {
@@ -994,9 +1439,9 @@
        HAMBURGER MENU
     ---------------------------------------------------------- */
     (function () {
-      var btn = document.getElementById('hamburger');
+      var btn    = document.getElementById('hamburger');
       var drawer = document.getElementById('mobile-drawer');
-      var links = drawer.querySelectorAll('.mobile-link');
+      var links  = drawer.querySelectorAll('.mobile-link');
 
       btn.addEventListener('click', function () {
         var isOpen = drawer.classList.toggle('open');
@@ -1027,7 +1472,7 @@
             obs.unobserve(e.target);
           }
         });
-      }, { threshold: 0.12 });
+      }, { threshold: 0.10 });
       els.forEach(function (el) { obs.observe(el); });
     })();
 
@@ -1035,17 +1480,17 @@
        COORDINATES EASTER EGG — Trail Magic
     ---------------------------------------------------------- */
     (function () {
-      var btn = document.getElementById('coord-btn');
+      var btn       = document.getElementById('coord-btn');
       var coordText = document.getElementById('coord-text');
-      var magic = document.getElementById('trail-magic');
-      var timer = null;
+      var magic     = document.getElementById('trail-magic');
+      var timer     = null;
 
       btn.addEventListener('click', function () {
-        if (timer) return; // debounce
+        if (timer) return;
         coordText.style.display = 'none';
-        magic.style.display = 'inline';
+        magic.style.display     = 'inline';
         timer = setTimeout(function () {
-          magic.style.display = 'none';
+          magic.style.display     = 'none';
           coordText.style.display = 'inline';
           timer = null;
         }, 1800);
@@ -1059,12 +1504,10 @@
       var cards = document.querySelectorAll('[data-tilt]');
       cards.forEach(function (card) {
         card.addEventListener('mousemove', function (e) {
-          var rect = card.getBoundingClientRect();
-          var x = (e.clientX - rect.left) / rect.width  - 0.5; // -0.5 to 0.5
+          var rect  = card.getBoundingClientRect();
+          var x = (e.clientX - rect.left) / rect.width  - 0.5;
           var y = (e.clientY - rect.top)  / rect.height - 0.5;
-          var tiltX = -(y * 12); // degrees
-          var tiltY =  (x * 12);
-          card.style.transform = 'perspective(600px) rotateX(' + tiltX + 'deg) rotateY(' + tiltY + 'deg) scale3d(1.02,1.02,1.02)';
+          card.style.transform = 'perspective(600px) rotateX(' + (-(y * 10)) + 'deg) rotateY(' + (x * 10) + 'deg) scale3d(1.02,1.02,1.02)';
         });
         card.addEventListener('mouseleave', function () {
           card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
@@ -1077,9 +1520,7 @@
     ---------------------------------------------------------- */
     (function () {
       var truck = document.getElementById('truck-easter-egg');
-      if (!truck) return;
-
-      if (!('IntersectionObserver' in window)) return;
+      if (!truck || !('IntersectionObserver' in window)) return;
 
       var obs = new IntersectionObserver(function (entries) {
         entries.forEach(function (e) {
