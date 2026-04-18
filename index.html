@@ -1,1538 +1,684 @@
-<!DOCTYPE html>
-<html lang="en" data-theme="dark">
+<!doctype html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Hamish Cairns — Emergency Management</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Start</title>
+  <meta name="color-scheme" content="dark" />
+  <meta name="description" content="Custom start page" />
 
-  <!-- Favicon: Star of Life in SAR Orange -->
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cg fill='%23FF6700'%3E%3Crect x='38' y='5' width='24' height='90' rx='5'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(60 50 50)'/%3E%3Crect x='38' y='5' width='24' height='90' rx='5' transform='rotate(120 50 50)'/%3E%3Ccircle cx='50' cy='50' r='14'/%3E%3C/g%3E%3C/svg%3E" />
-
-  <!-- Google Fonts: Inter -->
-  <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;900&display=swap" rel="stylesheet" />
-
-  <!-- Tailwind CSS CDN -->
-  <script src="https://cdn.tailwindcss.com"></script>
-
-  <!-- FontAwesome 6 Free -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <!-- Inline SVG favicon: compass in SAR orange -->
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='46' fill='%2307110e' stroke='%23ff6a2a' stroke-width='5'/%3E%3Cpolygon points='50,18 56,50 50,44 44,50' fill='%23ff6a2a'/%3E%3Cpolygon points='50,82 44,50 50,56 56,50' fill='%232f5e4e'/%3E%3Ccircle cx='50' cy='50' r='5' fill='%23e9f3ee'/%3E%3C/svg%3E" />
 
   <style>
-    /* ============================================================
-       CSS CUSTOM PROPERTIES — Theme Tokens
-    ============================================================ */
+    /* ───────────────────────────── DESIGN TOKENS ──────────────────────────── */
     :root {
-      --bg-primary:    #0f1a0f;
-      --bg-secondary:  #162316;
-      --bg-card:       #1a2e1a;
-      --bg-nav:        rgba(15, 26, 15, 0.92);
-      --accent:        #FF6700;
-      --accent-dim:    rgba(255, 103, 0, 0.18);
-      --text-primary:  #e8ede8;
-      --text-secondary:#9aac9a;
-      --text-muted:    #607060;
-      --border:        rgba(154, 172, 154, 0.15);
-      --topo-opacity:  0.04;
-    }
-    [data-theme="light"] {
-      --bg-primary:    #f4f2ed;
-      --bg-secondary:  #eceae3;
-      --bg-card:       #ffffff;
-      --bg-nav:        rgba(244, 242, 237, 0.95);
-      --accent:        #FF6700;
-      --accent-dim:    rgba(255, 103, 0, 0.10);
-      --text-primary:  #1a2010;
-      --text-secondary:#3a4a3a;
-      --text-muted:    #7a8a7a;
-      --border:        rgba(26, 32, 16, 0.12);
-      --topo-opacity:  0.06;
+      --bg0:     #06100d;
+      --bg1:     #0b1a14;
+      --sage:    #2f5e4e;
+      --sage2:   #3b7a64;
+      --sage3:   #4e9a7e;
+      --orange:  #ff6a2a;
+      --orange2: #ff8c50;
+      --orange3: #ffa97a;
+      --ink:     #e9f3ee;
+      --muted:   #92b0a3;
+      --faint:   #496b5a;
+
+      --card:    rgba(11,26,20,.78);
+      --stroke:  rgba(233,243,238,.09);
+      --radius:  20px;
+      --shadow:  0 28px 72px rgba(0,0,0,.55);
+
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas,
+              "Liberation Mono", "Courier New", monospace;
+      --sans: ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+              Helvetica, Arial, "Apple Color Emoji", sans-serif;
     }
 
-    /* ============================================================
-       BASE RESET & BODY
-    ============================================================ */
-    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-    html {
-      scroll-behavior: smooth;
-      scrollbar-width: thin;
-      scrollbar-color: var(--accent) var(--bg-secondary);
-    }
-    ::-webkit-scrollbar { width: 6px; }
-    ::-webkit-scrollbar-track { background: var(--bg-secondary); }
-    ::-webkit-scrollbar-thumb { background: var(--accent); border-radius: 3px; }
-
+    /* ────────────────────────────── RESET / BASE ──────────────────────────── */
+    *, *::before, *::after { box-sizing: border-box; }
+    html, body { height: 100%; margin: 0; }
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: var(--bg-primary);
-      color: var(--text-primary);
-      min-height: 100vh;
+      font-family: var(--sans);
+      color: var(--ink);
+      background:
+        radial-gradient(ellipse 1100px 700px at 18% 12%, rgba(255,106,42,.13), transparent 60%),
+        radial-gradient(ellipse 800px 600px at 80% 28%, rgba(47,94,78,.20), transparent 60%),
+        radial-gradient(ellipse 600px 500px at 55% 80%, rgba(47,94,78,.10), transparent 60%),
+        linear-gradient(175deg, var(--bg0) 0%, var(--bg1) 100%);
       overflow-x: hidden;
-      transition: background-color 0.3s ease, color 0.3s ease;
+      min-height: 100%;
     }
 
-    /* Topo SVG watermark */
+    /* Rugged grain overlay */
     body::before {
-      content: '';
-      position: fixed;
-      inset: 0;
-      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='800'%3E%3Cg fill='none' stroke='%239aac9a' stroke-width='1'%3E%3Cellipse cx='400' cy='400' rx='60' ry='40'/%3E%3Cellipse cx='400' cy='400' rx='110' ry='75'/%3E%3Cellipse cx='400' cy='400' rx='160' ry='115'/%3E%3Cellipse cx='400' cy='400' rx='215' ry='158'/%3E%3Cellipse cx='400' cy='400' rx='275' ry='205'/%3E%3Cellipse cx='400' cy='400' rx='340' ry='255'/%3E%3Cellipse cx='200' cy='200' rx='50' ry='35'/%3E%3Cellipse cx='200' cy='200' rx='90' ry='65'/%3E%3Cellipse cx='200' cy='200' rx='135' ry='98'/%3E%3Cellipse cx='600' cy='600' rx='55' ry='38'/%3E%3Cellipse cx='600' cy='600' rx='100' ry='72'/%3E%3Cellipse cx='600' cy='600' rx='150' ry='108'/%3E%3C/g%3E%3C/svg%3E");
-      background-repeat: repeat;
-      background-size: 800px 800px;
-      opacity: var(--topo-opacity);
-      pointer-events: none;
-      z-index: 0;
-    }
-
-    main, nav, footer, section { position: relative; z-index: 1; }
-
-    /* ============================================================
-       INTRO OVERLAY
-    ============================================================ */
-    #intro-overlay {
-      position: fixed;
-      inset: 0;
-      background: var(--bg-primary);
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: opacity 0.7s ease;
-    }
-    #intro-overlay.hide { opacity: 0; pointer-events: none; }
-
-    #intro-svg { overflow: visible; }
-
-    #drop { transition: opacity 0.3s ease; }
-
-    .ring-circle {
-      fill: none;
-      stroke: var(--accent);
-      stroke-width: 2;
-      opacity: 0;
-      transform-origin: 50px 50px;
-    }
-    .ring-circle.pulse { animation: ring-expand 1.1s ease-out forwards; }
-    .ring-circle:nth-child(2).pulse { animation-delay: 0.15s; }
-
-    @keyframes ring-expand {
-      0%   { r: 8;  opacity: 0.85; }
-      100% { r: 55; opacity: 0; }
-    }
-
-    #drop-shape {
-      fill: var(--accent);
-      animation: drop-fall 0.75s cubic-bezier(0.25,0.46,0.45,0.94) forwards;
-    }
-    @keyframes drop-fall {
-      0%   { transform: translateY(-60px); opacity: 0; }
-      60%  { opacity: 1; }
-      100% { transform: translateY(0px);  opacity: 1; }
-    }
-
-    /* ============================================================
-       NAVIGATION
-    ============================================================ */
-    #main-nav {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 56px;
-      background: var(--bg-nav);
-      backdrop-filter: blur(14px);
-      -webkit-backdrop-filter: blur(14px);
-      border-bottom: 1px solid var(--border);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      padding: 0 1.5rem;
-      gap: 1.5rem;
-    }
-
-    .nav-brand {
-      font-weight: 900;
-      font-size: 1.05rem;
-      letter-spacing: 0.12em;
-      color: var(--accent);
-      text-decoration: none;
-      flex-shrink: 0;
-    }
-
-    .nav-links {
-      display: flex;
-      align-items: center;
-      gap: 0.2rem;
-      flex: 1;
-      justify-content: center;
-      flex-wrap: wrap;
-    }
-
-    .nav-link {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      padding: 0.3rem 0.6rem;
-      border-radius: 4px;
-      transition: color 0.2s ease, background 0.2s ease;
-    }
-    .nav-link:hover { color: var(--accent); background: var(--accent-dim); }
-    .nav-link.active { color: var(--accent); }
-
-    .nav-anchor {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.7rem;
-      font-weight: 500;
-      letter-spacing: 0.05em;
-      text-transform: uppercase;
-      padding: 0.25rem 0.45rem;
-      border-radius: 3px;
-      transition: color 0.2s ease;
-      border-left: 1px solid var(--border);
-      margin-left: 0.15rem;
-    }
-    .nav-anchor:hover { color: var(--accent); }
-
-    #theme-toggle {
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      width: 34px; height: 34px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.85rem;
-      display: flex; align-items: center; justify-content: center;
-      transition: border-color 0.2s, color 0.2s;
-      flex-shrink: 0;
-    }
-    #theme-toggle:hover { border-color: var(--accent); color: var(--accent); }
-
-    #hamburger {
-      display: none;
-      background: none;
-      border: 1px solid var(--border);
-      color: var(--text-secondary);
-      width: 34px; height: 34px;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 0.9rem;
-      align-items: center; justify-content: center;
-      flex-shrink: 0;
-    }
-
-    #mobile-drawer {
-      position: fixed;
-      top: 56px; right: 0;
-      width: 240px;
-      background: var(--bg-card);
-      border-left: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1rem;
-      z-index: 999;
-      display: flex;
-      flex-direction: column;
-      gap: 0.5rem;
-      transform: translateX(100%);
-      transition: transform 0.28s ease;
-    }
-    #mobile-drawer.open { transform: translateX(0); }
-
-    .mobile-link {
-      color: var(--text-secondary);
-      text-decoration: none;
-      font-size: 0.85rem;
-      font-weight: 600;
-      letter-spacing: 0.07em;
-      text-transform: uppercase;
-      padding: 0.55rem 0.75rem;
-      border-radius: 4px;
-      transition: color 0.2s ease, background 0.2s ease;
-    }
-    .mobile-link:hover { color: var(--accent); background: var(--accent-dim); }
-    .mobile-link.active { color: var(--accent); }
-
-    @media (max-width: 768px) {
-      .nav-links { display: none; }
-      #hamburger { display: flex; }
-    }
-
-    /* ============================================================
-       SCROLL REVEAL
-    ============================================================ */
-    .reveal {
-      opacity: 0;
-      transform: translateY(22px);
-      transition: opacity 0.55s ease, transform 0.55s ease;
-    }
-    .reveal.visible { opacity: 1; transform: translateY(0); }
-
-    /* ============================================================
-       SECTION LABEL
-    ============================================================ */
-    .section-label {
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.5rem;
-      display: flex;
-      align-items: center;
-      gap: 0.5rem;
-    }
-    .section-label::after {
-      content: '';
-      display: block;
-      height: 1px;
-      width: 40px;
-      background: var(--accent);
-      opacity: 0.5;
-    }
-
-    /* ============================================================
-       TAG PILLS
-    ============================================================ */
-    .tag-pill {
-      border: 1px solid rgba(255, 103, 0, 0.4);
-      color: var(--accent);
-      font-size: 0.72rem;
-      padding: 0.2rem 0.6rem;
-      border-radius: 3px;
-      display: inline-block;
-      margin: 0.2rem;
-      font-weight: 500;
-      letter-spacing: 0.04em;
-    }
-
-    /* ============================================================
-       FILE-OPEN BUTTON
-    ============================================================ */
-    .file-btn {
-      display: inline-flex;
-      align-items: center;
-      gap: 0.4rem;
-      color: var(--accent);
-      font-size: 0.75rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      text-decoration: none;
-      font-family: 'Courier New', monospace;
-      border: 1px solid rgba(255, 103, 0, 0.35);
-      padding: 0.45rem 0.9rem;
-      border-radius: 3px;
-      background: var(--accent-dim);
-      transition: background 0.2s ease, border-color 0.2s ease;
-      margin-top: 1.2rem;
-    }
-    .file-btn:hover { background: rgba(255, 103, 0, 0.28); border-color: var(--accent); }
-
-    /* ============================================================
-       HERO
-    ============================================================ */
-    #hero {
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      text-align: center;
-      padding: 7rem 1.5rem 5rem;
-      position: relative;
-      overflow: hidden;
-    }
-
-    .hero-name {
-      font-size: clamp(2.8rem, 8vw, 6.5rem);
-      font-weight: 900;
-      letter-spacing: 0.06em;
-      text-transform: uppercase;
-      color: var(--text-primary);
-      line-height: 1.0;
-      margin-bottom: 1rem;
-    }
-
-    .hero-title {
-      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
-      color: var(--accent);
-      font-weight: 600;
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin-bottom: 0.75rem;
-    }
-
-    .hero-tagline {
-      font-style: italic;
-      font-size: clamp(0.9rem, 2vw, 1.05rem);
-      color: var(--text-secondary);
-      margin-bottom: 1.8rem;
-    }
-
-    #coord-btn {
-      background: none;
-      border: 1px solid var(--border);
-      cursor: pointer;
-      font-family: 'Courier New', monospace;
-      font-size: 0.78rem;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-      padding: 0.3rem 0.7rem;
-      border-radius: 3px;
-      transition: color 0.2s, border-color 0.2s;
-    }
-    #coord-btn:hover { color: var(--accent); border-color: var(--accent); }
-    #trail-magic { display: none; color: var(--accent); font-weight: 700; font-size: 0.85rem; }
-
-    #mountain-ridge {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      width: 100%;
-      pointer-events: none;
-    }
-
-    /* ============================================================
-       STATS BAR
-    ============================================================ */
-    #stats-bar {
-      background: var(--bg-secondary);
-      border-top: 2px solid var(--accent);
-      border-bottom: 1px solid var(--border);
-      padding: 1.6rem 2rem;
-    }
-
-    .stats-inner {
-      max-width: 900px;
-      margin: 0 auto;
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      flex-wrap: wrap;
-      gap: 1.5rem;
-    }
-
-    .stat-item { text-align: center; }
-
-    .stat-number {
-      font-family: 'Courier New', monospace;
-      font-size: clamp(1.6rem, 4vw, 2.4rem);
-      font-weight: 700;
-      color: var(--accent);
-      line-height: 1;
-      display: block;
-    }
-
-    .stat-label {
-      font-size: 0.68rem;
-      letter-spacing: 0.14em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      font-weight: 600;
-      margin-top: 0.3rem;
-      display: block;
-    }
-
-    .stat-divider { width: 1px; height: 40px; background: var(--border); }
-    @media (max-width: 600px) { .stat-divider { display: none; } }
-
-    /* ============================================================
-       ABOUT
-    ============================================================ */
-    #about {
-      padding: 5rem 1.5rem;
-      max-width: 860px;
-      margin: 0 auto;
-    }
-
-    .about-card {
-      border-left: 3px solid var(--accent);
-      background: var(--bg-card);
-      border-radius: 0 6px 6px 0;
-      padding: 2rem 2.2rem;
-      margin-bottom: 1.8rem;
-    }
-
-    .about-card p {
-      color: var(--text-secondary);
-      font-size: 0.95rem;
-      line-height: 1.75;
-      margin-bottom: 1rem;
-    }
-    .about-card p:last-child { margin-bottom: 0; }
-
-    .pull-quote {
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 1.2rem 0;
-      margin: 1.4rem 0 0;
-      font-style: italic;
-      font-size: 1rem;
-      color: var(--text-primary);
-      text-align: center;
-    }
-
-    /* ============================================================
-       CREDENTIALS HORIZONTAL SCROLL
-    ============================================================ */
-    #credentials {
-      padding: 5rem 0;
-      background: var(--bg-secondary);
-    }
-
-    .credentials-header {
-      max-width: 860px;
-      margin: 0 auto 2rem;
-      padding: 0 1.5rem;
-    }
-
-    .creds-scroll-wrap { position: relative; }
-    .creds-scroll-wrap::before,
-    .creds-scroll-wrap::after {
-      content: '';
-      position: absolute;
-      top: 0; bottom: 0;
-      width: 60px;
-      z-index: 2;
-      pointer-events: none;
-    }
-    .creds-scroll-wrap::before {
-      left: 0;
-      background: linear-gradient(to right, var(--bg-secondary), transparent);
-    }
-    .creds-scroll-wrap::after {
-      right: 0;
-      background: linear-gradient(to left, var(--bg-secondary), transparent);
-    }
-
-    .creds-scroll {
-      overflow-x: auto;
-      padding: 1rem 3rem;
-      display: flex;
-      gap: 0.75rem;
-      align-items: flex-start;
-      scrollbar-width: none;
-      -ms-overflow-style: none;
-    }
-    .creds-scroll::-webkit-scrollbar { display: none; }
-
-    .cred-badge {
-      flex-shrink: 0;
-      background: var(--bg-card);
-      border: 1px solid rgba(255, 103, 0, 0.3);
-      border-radius: 6px;
-      padding: 0.65rem 1rem;
-      display: flex;
-      align-items: center;
-      gap: 0.55rem;
-      font-size: 0.78rem;
-      font-weight: 600;
-      color: var(--text-primary);
-      white-space: nowrap;
-      letter-spacing: 0.04em;
-      transition: border-color 0.2s, background 0.2s;
-    }
-    .cred-badge:hover { border-color: var(--accent); background: var(--accent-dim); }
-    .cred-badge i { color: var(--accent); font-size: 0.85rem; width: 16px; text-align: center; }
-    .cred-badge.featured {
-      border-color: var(--accent);
-      background: var(--accent-dim);
-      padding: 0.8rem 1.2rem;
-      font-size: 0.82rem;
-    }
-
-    .credentials-footer {
-      max-width: 860px;
-      margin: 1.5rem auto 0;
-      padding: 0 1.5rem;
-    }
-
-    /* ============================================================
-       TOOLKIT / CAPABILITIES
-    ============================================================ */
-    #toolkit {
-      padding: 5rem 1.5rem;
-      max-width: 980px;
-      margin: 0 auto;
-    }
-
-    .toolkit-title {
-      font-size: 1.9rem;
-      font-weight: 900;
-      color: var(--text-primary);
-      margin-bottom: 2rem;
-      letter-spacing: -0.01em;
-    }
-
-    .toolkit-grid {
-      display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1rem;
-    }
-
-    .tk-card {
-      background: var(--bg-card);
-      border-radius: 6px;
-      padding: 1.6rem;
-      transition: transform 0.15s ease;
-    }
-    .tk-card h3 {
-      font-size: 0.85rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      color: var(--text-primary);
-      margin-bottom: 0.6rem;
-    }
-    .tk-card p {
-      font-size: 0.84rem;
-      color: var(--text-secondary);
-      line-height: 1.6;
-      margin-bottom: 0.75rem;
-    }
-
-    .tk-gis {
-      grid-column: 1 / -1;
-      border-top: 3px solid var(--accent);
+      content: "";
+      position: fixed; inset: 0; pointer-events: none; z-index: 0;
       background-image:
-        repeating-linear-gradient(0deg, transparent, transparent 24px, rgba(154,172,154,0.04) 24px, rgba(154,172,154,0.04) 25px),
-        repeating-linear-gradient(90deg, transparent, transparent 24px, rgba(154,172,154,0.04) 24px, rgba(154,172,154,0.04) 25px);
+        url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='200' height='200'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='200' height='200' filter='url(%23n)' opacity='0.06'/%3E%3C/svg%3E");
+      background-size: 200px 200px;
+      opacity: .65;
+      mix-blend-mode: overlay;
     }
 
-    .tk-gis-inner {
+    /* Subtle topo-ring accent (top-left) */
+    body::after {
+      content: "";
+      position: fixed; top: -120px; left: -120px;
+      width: 500px; height: 500px;
+      pointer-events: none; z-index: 0;
+      border-radius: 50%;
+      background:
+        repeating-radial-gradient(circle at center,
+          transparent 0px, transparent 28px,
+          rgba(255,106,42,.055) 28px, rgba(255,106,42,.055) 29px);
+      animation: topodrift 22s ease-in-out infinite;
+      opacity: .7;
+    }
+    @keyframes topodrift {
+      0%,100% { transform: translate(0,0) scale(1); }
+      33%      { transform: translate(30px,18px) scale(1.04); }
+      66%      { transform: translate(-10px,28px) scale(.97); }
+    }
+
+    /* ───────────────────────────── LAYOUT ─────────────────────────────────── */
+    .wrap {
+      position: relative; z-index: 1;
+      min-height: 100%;
       display: grid;
-      grid-template-columns: 1fr 1fr;
-      gap: 1.5rem;
+      place-items: center;
+      padding: 32px 14px 48px;
     }
 
-    .tk-medicine { border-left: 3px solid var(--accent); }
-
-    .tk-rescue { background: var(--bg-secondary); border: 1px solid var(--border); }
-
-    .tk-bar {
-      grid-column: 1 / -1;
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      border-radius: 4px;
-      padding: 1.2rem 1.6rem;
-      display: flex;
-      align-items: flex-start;
-    }
-
-    .tk-bar-item { flex: 1; padding: 0.3rem 1.2rem; }
-    .tk-bar-item + .tk-bar-item { border-left: 1px solid var(--border); }
-
-    .tk-bar-item h4 {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--accent);
-      margin-bottom: 0.3rem;
-    }
-    .tk-bar-item p { font-size: 0.78rem; color: var(--text-muted); }
-
-    .toolkit-footer { margin-top: 1.8rem; }
-
-    @media (max-width: 640px) {
-      .toolkit-grid { grid-template-columns: 1fr; }
-      .tk-gis, .tk-bar { grid-column: auto; }
-      .tk-gis-inner { grid-template-columns: 1fr; }
-      .tk-bar { flex-direction: column; }
-      .tk-bar-item + .tk-bar-item { border-left: none; border-top: 1px solid var(--border); }
-    }
-
-    /* ============================================================
-       PCT CALLOUT
-    ============================================================ */
-    #pct-callout {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      border-bottom: 1px solid var(--border);
-      padding: 5rem 1.5rem;
-      text-align: center;
+    .panel {
+      width: min(900px, 100%);
+      background: var(--card);
+      backdrop-filter: blur(14px) saturate(1.3);
+      border: 1px solid var(--stroke);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 26px 28px 30px;
       position: relative;
       overflow: hidden;
     }
 
-    .pct-miles {
-      font-family: 'Courier New', monospace;
-      font-size: clamp(4rem, 14vw, 9rem);
-      font-weight: 900;
-      color: var(--accent);
-      line-height: 1;
-      letter-spacing: -0.03em;
-    }
-    .pct-miles-label {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.28em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      margin-bottom: 0.5rem;
-      display: block;
-    }
-    .pct-sub {
-      font-size: 0.88rem;
-      color: var(--text-secondary);
-      letter-spacing: 0.08em;
-      text-transform: uppercase;
-      margin: 0.75rem 0 1.5rem;
-    }
-
-    .pct-quote {
-      max-width: 620px;
-      margin: 0 auto 1.5rem;
-      font-size: 0.92rem;
-      line-height: 1.7;
-      color: var(--text-secondary);
-      font-style: italic;
-      border-left: 3px solid rgba(255,103,0,0.4);
-      padding-left: 1.2rem;
-      text-align: left;
-    }
-
-    #trail-wave {
-      position: absolute;
-      bottom: 0; left: 0; right: 0;
-      opacity: 0.07;
+    /* Orange accent smear (top-right corner) */
+    .smear {
+      position: absolute; top: -80px; right: -80px;
+      width: 260px; height: 260px;
+      background: conic-gradient(from 190deg,
+        rgba(255,106,42,.0),
+        rgba(255,106,42,.40),
+        rgba(47,94,78,.15),
+        rgba(255,106,42,.0));
+      filter: blur(3px);
+      opacity: .8;
+      border-radius: 50%;
+      animation: smearwaft 11s ease-in-out infinite;
       pointer-events: none;
     }
-
-    /* ============================================================
-       TRUCK EASTER EGG
-    ============================================================ */
-    #truck-easter-egg {
-      max-width: 420px;
-      margin: 3rem auto;
-      padding: 0 1.5rem;
-      opacity: 0;
-      transform: translateX(-40px);
-      transition: opacity 0.8s ease, transform 0.8s ease;
-    }
-    #truck-easter-egg.in-view { opacity: 0.18; transform: translateX(0); }
-
-    /* ============================================================
-       EDUCATION
-    ============================================================ */
-    #education {
-      padding: 5rem 1.5rem;
-      max-width: 860px;
-      margin: 0 auto;
+    @keyframes smearwaft {
+      0%,100% { transform: rotate(0deg) scale(1);   opacity: .80; }
+      50%      { transform: rotate(22deg) scale(1.1); opacity: .95; }
     }
 
-    .edu-card {
-      background: var(--bg-card);
-      border-top: 3px solid var(--accent);
-      border-radius: 0 0 6px 6px;
-      padding: 2rem 2.2rem;
-    }
-
-    .edu-card-header {
+    /* ───────────────────────────── HEADER ─────────────────────────────────── */
+    header {
       display: flex;
       align-items: flex-start;
-      gap: 1.2rem;
-      margin-bottom: 1.5rem;
+      justify-content: space-between;
+      gap: 16px;
+      margin-bottom: 20px;
+      flex-wrap: wrap;
+      position: relative;
     }
 
-    .edu-icon {
-      width: 44px; height: 44px;
-      background: var(--accent-dim);
-      border: 1px solid rgba(255,103,0,0.3);
-      border-radius: 8px;
-      display: flex; align-items: center; justify-content: center;
-      color: var(--accent);
-      font-size: 1.1rem;
-      flex-shrink: 0;
-      margin-top: 2px;
+    .timebox { display: flex; flex-direction: column; gap: 5px; }
+
+    .clock {
+      font-family: var(--mono);
+      font-size: clamp(24px, 5vw, 36px);
+      font-weight: 500;
+      letter-spacing: .04em;
+      line-height: 1;
+      /* Glowing digit animation */
+      animation: clockglow 4s ease-in-out infinite;
+    }
+    @keyframes clockglow {
+      0%,100% { text-shadow: 0 0 0px transparent; }
+      50%      { text-shadow: 0 0 18px rgba(255,106,42,.28); }
     }
 
-    .edu-school {
-      font-size: 1.2rem;
-      font-weight: 900;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
+    .date {
+      color: var(--muted);
+      font-size: 13px;
+      letter-spacing: .02em;
     }
-    .edu-degree { font-size: 0.9rem; color: var(--accent); font-weight: 600; margin-top: 0.1rem; }
-    .edu-conc   { font-size: 0.82rem; color: var(--text-secondary); margin-top: 0.1rem; }
 
-    .edu-rows {
+    /* ───────────────────────── VIVALDI HINTS ──────────────────────────────── */
+    .hints {
       display: flex;
       flex-direction: column;
-      gap: 0.85rem;
-      border-top: 1px solid var(--border);
-      padding-top: 1.2rem;
+      gap: 6px;
+      text-align: right;
+      font-size: 11.5px;
+      color: var(--muted);
+      line-height: 1.4;
+      max-width: 380px;
+    }
+    .hints .hint-title {
+      font-size: 10px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: var(--faint);
+      margin-bottom: 2px;
+    }
+    .hints .hrow { display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end; align-items: center; }
+    .hints .hrow span { color: var(--muted); }
+    .kbd {
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--ink);
+      background: rgba(233,243,238,.07);
+      border: 1px solid rgba(233,243,238,.14);
+      border-bottom: 2px solid rgba(233,243,238,.22);
+      padding: 2px 7px 1px;
+      border-radius: 7px;
+      white-space: nowrap;
+      display: inline-block;
+      transition: background .15s, border-color .15s;
+    }
+    .kbd:hover {
+      background: rgba(255,106,42,.12);
+      border-color: rgba(255,106,42,.35);
+    }
+    .cmds-row {
+      display: flex; gap: 5px; flex-wrap: wrap; justify-content: flex-end;
+      margin-top: 3px;
+    }
+    .cmd-chip {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 2px 9px;
+      border-radius: 999px;
+      border: 1px solid rgba(255,106,42,.28);
+      background: rgba(255,106,42,.08);
+      color: rgba(255,106,42,.95);
+      white-space: nowrap;
+      cursor: default;
+      transition: background .15s, border-color .15s, transform .15s;
+    }
+    .cmd-chip:hover {
+      background: rgba(255,106,42,.18);
+      border-color: rgba(255,106,42,.55);
+      transform: translateY(-1px);
     }
 
-    .edu-row { display: flex; gap: 1rem; font-size: 0.82rem; }
+    /* ─────────────────────────── SEARCH BAR ───────────────────────────────── */
+    .search { margin-top: 4px; display: grid; gap: 8px; }
 
-    .edu-row-label {
-      width: 130px;
+    .bar {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      background: rgba(6,16,13,.65);
+      border: 1.5px solid rgba(233,243,238,.12);
+      border-radius: 16px;
+      padding: 9px 14px;
+      transition: border-color .2s, box-shadow .2s, transform .2s;
+    }
+    .bar:focus-within {
+      border-color: rgba(255,106,42,.55);
+      box-shadow: 0 0 0 5px rgba(255,106,42,.11);
+      transform: translateY(-1px);
+    }
+
+    .mode-badge {
+      font-family: var(--mono);
+      font-size: 11px;
+      padding: 5px 11px;
+      border-radius: 999px;
+      border: 1px solid rgba(233,243,238,.10);
+      background: linear-gradient(180deg, rgba(47,94,78,.32), rgba(47,94,78,.10));
+      color: rgba(233,243,238,.88);
+      white-space: nowrap;
+      display: flex;
+      align-items: center;
+      gap: 7px;
       flex-shrink: 0;
-      font-size: 0.68rem;
-      font-weight: 700;
-      letter-spacing: 0.12em;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      padding-top: 0.15rem;
+      transition: background .2s, border-color .2s;
+    }
+    .mode-badge.cmd-mode {
+      border-color: rgba(255,106,42,.35);
+      background: linear-gradient(180deg, rgba(255,106,42,.22), rgba(255,106,42,.07));
     }
 
-    .edu-row-content { color: var(--text-secondary); line-height: 1.55; }
-
-    .edu-coords {
-      margin-top: 1.4rem;
-      font-family: 'Courier New', monospace;
-      font-size: 0.72rem;
-      color: var(--text-muted);
-      letter-spacing: 0.1em;
-    }
-
-    /* ============================================================
-       FOOTER
-    ============================================================ */
-    footer {
-      background: var(--bg-secondary);
-      border-top: 1px solid var(--border);
-      padding: 3rem 1.5rem 2rem;
-    }
-
-    .footer-inner {
-      max-width: 860px;
-      margin: 0 auto;
-      text-align: center;
-    }
-
-    .status-wrap {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      gap: 0.75rem;
-      margin-bottom: 1.5rem;
-    }
-
-    .radar-ping { position: relative; width: 22px; height: 22px; flex-shrink: 0; }
-    .radar-dot {
-      position: absolute;
-      top: 50%; left: 50%;
-      width: 7px; height: 7px;
-      background: var(--accent);
+    .dot {
+      width: 8px; height: 8px;
       border-radius: 50%;
-      transform: translate(-50%, -50%);
+      background: var(--orange);
+      box-shadow: 0 0 0 3px rgba(255,106,42,.15);
+      animation: pulse 2.4s ease-in-out infinite;
+      flex-shrink: 0;
     }
-    .radar-wave {
-      position: absolute;
-      top: 50%; left: 50%;
-      border: 1.5px solid var(--accent);
-      border-radius: 50%;
-      transform: translate(-50%, -50%) scale(0);
-      animation: radar-pulse 2.4s ease-out infinite;
-    }
-    .radar-wave:nth-child(2) { animation-delay: 0.8s; }
-    .radar-wave:nth-child(3) { animation-delay: 1.6s; }
-
-    @keyframes radar-pulse {
-      0%   { width: 7px;  height: 7px;  opacity: 0.9; transform: translate(-50%, -50%) scale(0); }
-      100% { width: 44px; height: 44px; opacity: 0;   transform: translate(-50%, -50%) scale(1); }
+    @keyframes pulse {
+      0%,100% { transform: scale(1);    box-shadow: 0 0 0 3px rgba(255,106,42,.15); }
+      50%      { transform: scale(1.4); box-shadow: 0 0 0 5px rgba(255,106,42,.25); }
     }
 
-    .status-text {
-      font-size: 0.72rem;
-      font-weight: 700;
-      letter-spacing: 0.18em;
-      text-transform: uppercase;
-      color: var(--accent);
+    #q {
+      flex: 1;
+      border: 0; outline: none;
+      background: transparent;
+      color: var(--ink);
+      font-family: var(--sans);
+      font-size: 17px;
+      padding: 8px 4px;
+      caret-color: var(--orange);
     }
+    #q::placeholder { color: rgba(233,243,238,.38); }
+    #q::selection   { background: rgba(255,106,42,.28); }
 
-    .footer-links {
+    .subrow {
       display: flex;
+      justify-content: space-between;
       align-items: center;
-      justify-content: center;
-      gap: 1rem;
-      margin-bottom: 1.2rem;
+      gap: 10px;
       flex-wrap: wrap;
+      font-size: 11.5px;
+      color: var(--muted);
+    }
+    .pill {
+      background: rgba(233,243,238,.04);
+      border: 1px solid rgba(233,243,238,.08);
+      border-radius: 999px;
+      padding: 5px 11px;
     }
 
-    .footer-btn {
-      display: inline-flex;
+    /* ─────────────────────────── GRID SECTION ─────────────────────────────── */
+    .grid {
+      margin-top: 18px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 12px;
+    }
+    @media (min-width: 640px) {
+      .grid { grid-template-columns: 1fr 1fr; }
+      .quote-card { grid-column: span 1; }
+    }
+
+    /* Card base */
+    .card {
+      border: 1px solid rgba(233,243,238,.09);
+      background: rgba(6,16,13,.40);
+      border-radius: 16px;
+      padding: 16px 16px 18px;
+      position: relative;
+      overflow: hidden;
+      transition: transform .18s ease, border-color .18s ease, box-shadow .18s ease;
+    }
+    .card::before {
+      content: "";
+      position: absolute; inset: 0; border-radius: inherit;
+      background: linear-gradient(135deg, rgba(255,106,42,.05), rgba(47,94,78,.03));
+      opacity: 0;
+      transition: opacity .25s;
+    }
+    .card:hover {
+      transform: translateY(-2px);
+      border-color: rgba(47,94,78,.35);
+      box-shadow: 0 8px 30px rgba(0,0,0,.30);
+    }
+    .card:hover::before { opacity: 1; }
+
+    .card h2 {
+      margin: 0 0 12px 0;
+      font-size: 11px;
+      letter-spacing: .14em;
+      text-transform: uppercase;
+      color: rgba(233,243,238,.75);
+      display: flex;
       align-items: center;
-      gap: 0.4rem;
-      background: var(--accent-dim);
-      border: 1px solid rgba(255,103,0,0.4);
-      color: var(--accent);
-      font-size: 0.78rem;
-      font-weight: 700;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      text-decoration: none;
-      padding: 0.45rem 1rem;
-      border-radius: 4px;
-      transition: background 0.2s ease;
+      gap: 8px;
     }
-    .footer-btn:hover { background: rgba(255, 103, 0, 0.28); }
-
-    .footer-email {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.8rem;
-      font-family: 'Courier New', monospace;
-      letter-spacing: 0.04em;
-      transition: color 0.2s ease;
+    .tag {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: rgba(255,106,42,.90);
+      border: 1px solid rgba(255,106,42,.25);
+      background: rgba(255,106,42,.07);
+      padding: 1px 7px;
+      border-radius: 999px;
     }
-    .footer-email:hover { color: var(--accent); }
 
-    .footer-copy  { font-size: 0.72rem; color: var(--text-muted); margin-bottom: 0.3rem; }
-    .footer-trail { font-size: 0.72rem; color: var(--text-muted); font-family: 'Courier New', monospace; letter-spacing: 0.06em; margin-bottom: 1.2rem; }
-
-    .footer-nav { display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap; }
-    .footer-nav a {
-      color: var(--text-muted);
-      text-decoration: none;
-      font-size: 0.72rem;
-      font-weight: 600;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      transition: color 0.2s ease;
+    /* AI links */
+    .links {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+      gap: 9px;
     }
-    .footer-nav a:hover { color: var(--accent); }
+    .link-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 10px 13px;
+      border-radius: 13px;
+      border: 1px solid rgba(233,243,238,.08);
+      background: rgba(233,243,238,.03);
+      text-decoration: none;
+      color: var(--ink);
+      font-size: 14px;
+      transition: transform .14s, border-color .14s, background .14s;
+    }
+    .link-item:hover {
+      transform: translateY(-2px) scale(1.02);
+      border-color: rgba(255,106,42,.32);
+      background: rgba(255,106,42,.07);
+    }
+    .link-item:focus-visible {
+      outline: 2px solid var(--orange);
+      outline-offset: 2px;
+    }
+    .link-item small {
+      font-family: var(--mono);
+      font-size: 10px;
+      color: var(--muted);
+    }
+    .link-icon {
+      font-size: 17px;
+      line-height: 1;
+      filter: drop-shadow(0 0 5px rgba(255,106,42,.25));
+    }
+
+    /* Quote card */
+    .quote-card {
+      border-left: 3px solid var(--orange);
+      background: linear-gradient(135deg,
+        rgba(255,106,42,.06) 0%,
+        rgba(47,94,78,.04) 100%);
+    }
+    .quote-card h2 { margin-bottom: 10px; }
+    #quoteText {
+      margin: 0;
+      font-size: 14px;
+      line-height: 1.55;
+      color: rgba(233,243,238,.92);
+      font-style: italic;
+    }
+    #quoteMeta {
+      display: block;
+      margin-top: 10px;
+      font-family: var(--mono);
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    /* ─────────────────────────── FOOTER ───────────────────────────────────── */
+    footer.page-footer {
+      margin-top: 18px;
+      text-align: center;
+      font-size: 11px;
+      color: var(--faint);
+      letter-spacing: .05em;
+    }
+
+    /* ─────────────────────────── FOCUS / A11Y ─────────────────────────────── */
+    :focus-visible {
+      outline: 2px solid var(--orange2);
+      outline-offset: 3px;
+    }
+    .bar:focus-within #q:focus-visible { outline: none; }
+
+    /* ─────────────────────────── RESPONSIVE ───────────────────────────────── */
+    @media (max-width: 540px) {
+      .panel { padding: 18px 14px 22px; }
+      header { flex-direction: column-reverse; }
+      .hints { text-align: left; max-width: 100%; }
+      .hints .hrow,
+      .cmds-row { justify-content: flex-start; }
+    }
   </style>
 </head>
+
 <body>
+<div class="wrap" role="main">
+  <article class="panel" aria-label="Start page">
+    <div class="smear" aria-hidden="true"></div>
 
-  <!-- ============================================================
-       INTRO OVERLAY — Radar Pulse Reveal
-  ============================================================ -->
-  <div id="intro-overlay" role="presentation" aria-hidden="true">
-    <svg id="intro-svg" width="100" height="100" viewBox="0 0 100 100">
-      <circle id="ring1" class="ring-circle" cx="50" cy="50" r="8" />
-      <circle id="ring2" class="ring-circle" cx="50" cy="50" r="8" />
-      <g id="drop">
-        <path id="drop-shape" d="M50 30 C50 30 38 48 38 56 C38 63 43.5 68 50 68 C56.5 68 62 63 62 56 C62 48 50 30 50 30Z" />
-      </g>
-    </svg>
-  </div>
-
-  <!-- ============================================================
-       NAVIGATION
-  ============================================================ -->
-  <nav id="main-nav" role="navigation" aria-label="Main navigation">
-    <a href="index.html" class="nav-brand" aria-label="H. Cairns home">H.CAIRNS</a>
-
-    <div class="nav-links">
-      <a href="index.html"       class="nav-link active">Home</a>
-      <a href="about.html"       class="nav-link">About</a>
-      <a href="skills.html"      class="nav-link">Skills</a>
-      <a href="credentials.html" class="nav-link">Credentials</a>
-      <a href="pct.html"         class="nav-link">PCT</a>
-      <a href="#about"      class="nav-anchor">Record</a>
-      <a href="#toolkit"    class="nav-anchor">Toolkit</a>
-      <a href="#education"  class="nav-anchor">Education</a>
-    </div>
-
-    <button id="theme-toggle" aria-label="Toggle light/dark mode">
-      <i id="theme-icon" class="fa-solid fa-sun"></i>
-    </button>
-
-    <button id="hamburger" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-drawer">
-      <i class="fa-solid fa-bars"></i>
-    </button>
-  </nav>
-
-  <!-- Mobile Drawer -->
-  <div id="mobile-drawer" role="dialog" aria-label="Mobile navigation">
-    <a href="index.html"       class="mobile-link active">Home</a>
-    <a href="about.html"       class="mobile-link">About</a>
-    <a href="skills.html"      class="mobile-link">Skills</a>
-    <a href="credentials.html" class="mobile-link">Credentials</a>
-    <a href="pct.html"         class="mobile-link">PCT</a>
-    <a href="#about"     class="mobile-link" style="color:var(--text-muted);font-size:0.72rem;">&#8594; Personnel Record</a>
-    <a href="#toolkit"   class="mobile-link" style="color:var(--text-muted);font-size:0.72rem;">&#8594; Capabilities</a>
-    <a href="#education" class="mobile-link" style="color:var(--text-muted);font-size:0.72rem;">&#8594; Education</a>
-  </div>
-
-  <!-- ============================================================
-       MAIN CONTENT
-  ============================================================ -->
-  <main id="main-content">
-
-    <!-- ===================================================
-         SECTION 1: HERO
-    =================================================== -->
-    <section id="hero" aria-label="Hero introduction">
-
-      <div class="reveal">
-        <h1 class="hero-name">Hamish Cairns</h1>
-        <p class="hero-title">Wilderness Medic &amp; Emergency Management Specialist</p>
-        <p class="hero-tagline">&#8220;Mapping the Chaos. Guarding the Trail.&#8221;</p>
-
-        <button id="coord-btn" aria-label="Click for a surprise">
-          <span id="coord-text">44.5646&#176; N, 123.2620&#176; W</span>
-          <span id="trail-magic">TRAIL MAGIC &#10024;</span>
-        </button>
+    <!-- ── HEADER: clock + Vivaldi hints ──────────────────────────────────── -->
+    <header>
+      <div class="timebox">
+        <div class="clock" id="clock" aria-live="polite" aria-label="Current time">--:--</div>
+        <div class="date"  id="date"  aria-label="Today's date">———</div>
       </div>
 
-      <!-- Mountain ridge SVG silhouette — 3 polygon layers -->
-      <svg id="mountain-ridge" viewBox="0 0 1440 160" preserveAspectRatio="none" aria-hidden="true">
-        <polygon
-          points="0,160 0,120 60,105 120,115 200,85 280,100 360,70 440,90 520,55 600,80 680,45 760,72 840,38 920,65 1000,30 1080,58 1160,22 1240,50 1320,18 1380,42 1440,28 1440,160"
-          fill="rgba(15,26,15,0.9)" />
-        <polygon
-          points="0,160 0,135 80,120 160,130 240,105 340,118 440,92 520,108 620,78 700,95 800,62 880,82 980,48 1060,70 1160,38 1240,62 1340,30 1440,55 1440,160"
-          fill="rgba(22,35,22,0.95)" />
-        <polygon
-          points="0,160 0,148 100,138 200,148 300,128 400,142 500,120 600,136 700,112 800,130 900,108 1000,126 1100,100 1200,120 1300,105 1440,125 1440,160"
-          fill="var(--bg-primary)" />
-      </svg>
-    </section>
+      <nav class="hints" aria-label="Vivaldi macOS shortcuts and commands">
+        <div class="hint-title">Vivaldi / macOS shortcuts</div>
 
-    <!-- ===================================================
-         SECTION 2: STATS BAR
-    =================================================== -->
-    <section id="stats-bar" aria-label="Key statistics">
-      <div class="stats-inner reveal">
-        <div class="stat-item">
-          <span class="stat-number">2,650</span>
-          <span class="stat-label">Miles Hiked (PCT)</span>
+        <div class="hrow">
+          <kbd class="kbd" title="Open address bar">⌘L</kbd><span>address bar</span>
+          <kbd class="kbd" title="New tab">⌘T</kbd><span>new tab</span>
+          <kbd class="kbd" title="Close tab">⌘W</kbd><span>close tab</span>
         </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-item">
-          <span class="stat-number">6</span>
-          <span class="stat-label">Months in the Field</span>
+        <div class="hrow">
+          <kbd class="kbd" title="Command chain">⌘⇧P</kbd><span>cmd chain</span>
+          <kbd class="kbd" title="Fullscreen">⌘⇧F</kbd><span>fullscreen</span>
+          <kbd class="kbd" title="Quick commands">F2</kbd><span>quick cmds</span>
         </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-item">
-          <span class="stat-number">13+</span>
-          <span class="stat-label">Certifications</span>
-        </div>
-        <div class="stat-divider" aria-hidden="true"></div>
-        <div class="stat-item">
-          <span class="stat-number">3+</span>
-          <span class="stat-label">Yrs Field Ops</span>
-        </div>
-      </div>
-    </section>
-
-    <!-- ===================================================
-         SECTION 3: ABOUT — 01 / PERSONNEL RECORD
-    =================================================== -->
-    <section id="about" aria-labelledby="about-heading">
-      <div class="section-label reveal">01 / Personnel Record</div>
-      <h2 id="about-heading" class="reveal" style="font-size:1.9rem;font-weight:900;color:var(--text-primary);margin-bottom:1.5rem;letter-spacing:-0.01em;">
-        About
-      </h2>
-
-      <div class="about-card reveal">
-        <p>
-          Emergency management contractor and backcountry emergency responder with Oregon State Parks.
-          Built on 2,650 miles of trail discipline from a Pacific Crest Trail thru-hike and a foundation
-          in natural resource science &#8212; the kind of background that doesn&#8217;t come from a
-          classroom alone.
-        </p>
-        <p>
-          Trained in technical rescue, wilderness medicine, and spatial intelligence. Certified EMT,
-          Wilderness First Responder, licensed HAM radio operator, and GIS specialist. Operates where
-          cell service ends and the work begins &#8212; whether that&#8217;s a high-angle extraction,
-          a multi-agency incident, or mapping a wildfire perimeter from a drone feed.
-        </p>
-        <p>
-          Currently pursuing a B.S. in Natural Resources at Oregon State University with an Environmental
-          Disaster Management focus, expected graduation 2035. Coursework applied directly to the field,
-          not the other way around.
-        </p>
-
-        <blockquote class="pull-quote">
-          &#8220;Built for the terrain between the last cell tower and the trailhead.&#8221;
-        </blockquote>
-      </div>
-
-      <a href="about.html" class="file-btn reveal">
-        <i class="fa-solid fa-folder-open"></i> Open Full Brief &#8594;
-      </a>
-    </section>
-
-    <!-- ===================================================
-         SECTION 4: CREDENTIALS — 02 / QUALIFICATIONS
-    =================================================== -->
-    <section id="credentials" aria-labelledby="creds-heading">
-      <div class="credentials-header">
-        <div class="section-label reveal">02 / Qualifications</div>
-        <h2 id="creds-heading" class="reveal" style="font-size:1.9rem;font-weight:900;color:var(--text-primary);letter-spacing:-0.01em;">
-          Credentials
-        </h2>
-      </div>
-
-      <div class="creds-scroll-wrap reveal">
-        <div class="creds-scroll" role="list" aria-label="Credentials list">
-
-          <div class="cred-badge featured" role="listitem">
-            <i class="fa-solid fa-star-of-life"></i> EMT-Basic
-          </div>
-          <div class="cred-badge featured" role="listitem">
-            <i class="fa-solid fa-star-of-life"></i> EMT-Advanced
-          </div>
-          <div class="cred-badge featured" role="listitem">
-            <i class="fa-solid fa-briefcase-medical"></i> WFR &#8212; Wilderness First Responder
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-kit-medical"></i> WFA &#8212; Wilderness First Aid
-          </div>
-          <div class="cred-badge featured" role="listitem">
-            <i class="fa-solid fa-tower-broadcast"></i> HAM Radio License
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-map"></i> GIS Certification
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-shield-halved"></i> Disaster Response &amp; Mgmt
-          </div>
-          <div class="cred-badge featured" role="listitem">
-            <i class="fa-solid fa-rope"></i> Technical Rescue Cert
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-person-falling-burst"></i> Rope / High-Angle Rescue
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-water"></i> Whitewater Rescue
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-heart-pulse"></i> Extended ELS
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-mountain"></i> Rock Climbing
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-wrench"></i> Engine Repair / Mechanics
-          </div>
-          <div class="cred-badge" role="listitem">
-            <i class="fa-solid fa-fire"></i> Wildfire &amp; Forestry
-          </div>
-
-        </div>
-      </div>
-
-      <div class="credentials-footer reveal">
-        <a href="credentials.html" class="file-btn">
-          <i class="fa-solid fa-folder-open"></i> View Full Record &#8594;
-        </a>
-      </div>
-    </section>
-
-    <!-- ===================================================
-         SECTION 5: TOOLKIT — 03 / CAPABILITIES (asymmetric)
-    =================================================== -->
-    <section id="toolkit" aria-labelledby="toolkit-heading">
-      <div class="section-label reveal">03 / Capabilities</div>
-      <h2 id="toolkit-heading" class="toolkit-title reveal">The Toolkit</h2>
-
-      <div class="toolkit-grid reveal">
-
-        <!-- GIS Featured Card — full width, data-grid overlay -->
-        <div class="tk-card tk-gis" data-tilt>
-          <div class="tk-gis-inner">
-            <div>
-              <h3>
-                <i class="fa-solid fa-map" style="color:var(--accent);margin-right:0.5rem;"></i>
-                GIS &amp; Spatial Intelligence
-              </h3>
-              <p>
-                Full-stack geospatial operator &#8212; from aerial acquisition to publishable map products.
-                Drone-based photogrammetry for incident mapping, terrain modeling, and search-area
-                prioritization. Builds offline-capable GIS packages for field deployment where
-                connectivity is unavailable. Integrates with ICS structure for real-time operational maps.
-              </p>
-              <div>
-                <span class="tag-pill">ArcGIS Pro</span>
-                <span class="tag-pill">QGIS</span>
-                <span class="tag-pill">Pix4D</span>
-                <span class="tag-pill">Drone2Map</span>
-                <span class="tag-pill">Field Maps</span>
-                <span class="tag-pill">Survey123</span>
-              </div>
-            </div>
-            <div>
-              <div style="background:var(--bg-secondary);border:1px solid var(--border);border-radius:4px;padding:1rem;font-family:'Courier New',monospace;font-size:0.72rem;color:var(--text-muted);line-height:1.7;">
-                <div style="color:var(--accent);margin-bottom:0.4rem;">&#9658; SPATIAL_OPS.log</div>
-                <div>DRONE_SURVEY ........ ACTIVE</div>
-                <div>TERRAIN_MODEL ....... RENDERED</div>
-                <div>OFFLINE_PACKAGE ..... DEPLOYED</div>
-                <div>COORDINATE_SYS ...... WGS84</div>
-                <div>DATUM ............... NAD83</div>
-                <div style="color:var(--accent);margin-top:0.4rem;">STATUS .............. FIELD READY</div>
-              </div>
-            </div>
-          </div>
+        <div class="hrow">
+          <kbd class="kbd" title="Reopen closed tab">⌘⇧T</kbd><span>reopen tab</span>
+          <kbd class="kbd" title="Focus page">F6</kbd><span>focus page</span>
+          <kbd class="kbd" title="Zoom in">⌘+</kbd><span>zoom in</span>
         </div>
 
-        <!-- Wilderness Medicine Card -->
-        <div class="tk-card tk-medicine" data-tilt>
-          <h3>
-            <i class="fa-solid fa-briefcase-medical" style="color:var(--accent);margin-right:0.5rem;"></i>
-            Wilderness Medicine
-          </h3>
-          <p>
-            Dual-certified EMT with Wilderness First Responder credentials. Trained in prolonged
-            field care, remote patient assessment, and managing emergencies where ALS backup is
-            hours away. Oregon State Parks primary field responder.
-          </p>
-          <div>
-            <span class="tag-pill">WFR</span>
-            <span class="tag-pill">EMT-B</span>
-            <span class="tag-pill">EMT-A</span>
-            <span class="tag-pill">Extended ELS</span>
-            <span class="tag-pill">WFA</span>
-          </div>
+        <div class="hint-title" style="margin-top:6px;">page commands</div>
+        <div class="cmds-row" role="list" aria-label="Available commands">
+          <span class="cmd-chip" role="listitem" title="→ claude.ai">claude</span>
+          <span class="cmd-chip" role="listitem" title="→ gemini.google.com">gemini</span>
+          <span class="cmd-chip" role="listitem" title="→ pcta.org">pcta</span>
+          <span class="cmd-chip" role="listitem" title="→ oregonstate.edu">osu</span>
+          <span class="cmd-chip" role="listitem" title="Force Google search">!query</span>
         </div>
-
-        <!-- Technical Rescue Card -->
-        <div class="tk-card tk-rescue" data-tilt>
-          <h3>
-            <i class="fa-solid fa-rope" style="color:var(--accent);margin-right:0.5rem;"></i>
-            Technical Rescue
-          </h3>
-          <p>
-            Rope and high-angle rescue operations, swiftwater technician, rock climbing safety
-            anchor systems. OSU ALI program graduate. Integrates rescue skills with medical
-            response for packaged-patient extractions in technical terrain.
-          </p>
-          <div>
-            <span class="tag-pill">High-Angle</span>
-            <span class="tag-pill">Swiftwater</span>
-            <span class="tag-pill">OSU ALI</span>
-            <span class="tag-pill">Rock Climbing</span>
-          </div>
-        </div>
-
-        <!-- Full-width horizontal capability bar -->
-        <div class="tk-bar">
-          <div class="tk-bar-item">
-            <h4><i class="fa-solid fa-tower-broadcast" style="font-size:0.65rem;margin-right:0.3rem;"></i>Communications</h4>
-            <p>Licensed HAM operator. Satellite comms integration for off-grid incident command.</p>
-            <div style="margin-top:0.4rem;">
-              <span class="tag-pill">HAM Radio</span>
-              <span class="tag-pill">Satellite Comms</span>
-            </div>
-          </div>
-          <div class="tk-bar-item">
-            <h4><i class="fa-solid fa-shield-halved" style="font-size:0.65rem;margin-right:0.3rem;"></i>Emergency Management</h4>
-            <p>ICS/NIMS compliant. Multi-agency coordination and disaster response operations.</p>
-            <div style="margin-top:0.4rem;">
-              <span class="tag-pill">ICS/NIMS</span>
-              <span class="tag-pill">Multi-Agency</span>
-            </div>
-          </div>
-          <div class="tk-bar-item">
-            <h4><i class="fa-solid fa-truck" style="font-size:0.65rem;margin-right:0.3rem;"></i>Field Mobility</h4>
-            <p>Overland operations. Garmin Tread navigator. Backcountry vehicle recovery trained.</p>
-            <div style="margin-top:0.4rem;">
-              <span class="tag-pill">Garmin Tread</span>
-              <span class="tag-pill">Overland Ops</span>
-            </div>
-          </div>
-        </div>
-
-      </div>
-
-      <div class="toolkit-footer reveal">
-        <a href="skills.html" class="file-btn">
-          <i class="fa-solid fa-folder-open"></i> Full Capability Breakdown &#8594;
-        </a>
-      </div>
-    </section>
-
-    <!-- ===================================================
-         TRUCK EASTER EGG
-    =================================================== -->
-    <div id="truck-easter-egg" aria-hidden="true">
-      <svg viewBox="0 0 420 180" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <rect x="10" y="80" width="400" height="60" rx="6" stroke="#FF6700" stroke-width="1.2" fill="none"/>
-        <path d="M10 80 L80 80 L80 40 L220 40 L280 80 L400 80" stroke="#FF6700" stroke-width="1.2" fill="none"/>
-        <path d="M80 40 L100 40 L100 80" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <circle cx="90"  cy="148" r="28" stroke="#FF6700" stroke-width="1.2" fill="none"/>
-        <circle cx="90"  cy="148" r="14" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <circle cx="330" cy="148" r="28" stroke="#FF6700" stroke-width="1.2" fill="none"/>
-        <circle cx="330" cy="148" r="14" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.5"/>
-        <rect x="300" y="50" width="100" height="30" rx="2" stroke="#FF6700" stroke-width="0.8" fill="none" opacity="0.4"/>
-        <line x1="10" y1="120" x2="400" y2="120" stroke="#FF6700" stroke-width="0.6" opacity="0.3"/>
-        <text x="210" y="175" fill="#FF6700" font-size="9" text-anchor="middle" opacity="0.6" font-family="Courier New, monospace" letter-spacing="3">F-150 RAPTOR &#183; FIELD OPS</text>
-      </svg>
-    </div>
-
-    <!-- ===================================================
-         SECTION 6: PCT CALLOUT
-    =================================================== -->
-    <section id="pct-callout" aria-labelledby="pct-heading">
-      <div class="reveal">
-        <span class="pct-miles-label">Pacific Crest Trail</span>
-        <div class="pct-miles" id="pct-heading">2,650</div>
-        <p class="pct-sub">Mexico to Canada &nbsp;&#183;&nbsp; Pacific Crest Trail &nbsp;&#183;&nbsp; 6 Months</p>
-
-        <blockquote class="pct-quote">
-          Six months of self-reliance, field discipline, and decision-making in terrain that doesn&#8217;t
-          forgive mistakes. The PCT isn&#8217;t a r&#233;sum&#233; line &#8212; it&#8217;s the foundation
-          everything else is built on.
-        </blockquote>
-
-        <a href="pct.html" class="file-btn">
-          <i class="fa-solid fa-folder-open"></i> Read the Full Story &#8594;
-        </a>
-      </div>
-
-      <!-- Wavy trail SVG background hint -->
-      <svg id="trail-wave" viewBox="0 0 1440 80" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M0,40 C120,10 240,70 360,40 C480,10 600,70 720,40 C840,10 960,70 1080,40 C1200,10 1320,70 1440,40"
-              stroke="#FF6700" stroke-width="3" fill="none"/>
-      </svg>
-    </section>
-
-    <!-- ===================================================
-         SECTION 7: EDUCATION — 04 / ACADEMIC RECORD
-    =================================================== -->
-    <section id="education" aria-labelledby="edu-heading">
-      <div class="section-label reveal">04 / Academic Record</div>
-      <h2 id="edu-heading" class="reveal" style="font-size:1.9rem;font-weight:900;color:var(--text-primary);margin-bottom:1.5rem;letter-spacing:-0.01em;">
-        Education
-      </h2>
-
-      <div class="edu-card reveal">
-        <div class="edu-card-header">
-          <div class="edu-icon" aria-hidden="true">
-            <i class="fa-solid fa-graduation-cap"></i>
-          </div>
-          <div>
-            <div class="edu-school">Oregon State University</div>
-            <div class="edu-degree">B.S. in Natural Resources</div>
-            <div class="edu-conc">Environmental Disaster Management</div>
-          </div>
-        </div>
-
-        <div class="edu-rows">
-          <div class="edu-row">
-            <div class="edu-row-label">Expected</div>
-            <div class="edu-row-content">Class of 2035</div>
-          </div>
-          <div class="edu-row">
-            <div class="edu-row-label">Location</div>
-            <div class="edu-row-content">Corvallis, OR</div>
-          </div>
-          <div class="edu-row">
-            <div class="edu-row-label">Coursework</div>
-            <div class="edu-row-content">
-              <span class="tag-pill">Disaster Response</span>
-              <span class="tag-pill">GIS Applications</span>
-              <span class="tag-pill">Wildfire Ecology</span>
-              <span class="tag-pill">Natural Resource Mgmt</span>
-              <span class="tag-pill">Emergency Planning</span>
-            </div>
-          </div>
-          <div class="edu-row">
-            <div class="edu-row-label">Activities</div>
-            <div class="edu-row-content">
-              ALI Technical Rescue Program &nbsp;&#183;&nbsp; Campus First Responder
-            </div>
-          </div>
-          <div class="edu-row">
-            <div class="edu-row-label">Note</div>
-            <div class="edu-row-content" style="color:var(--text-muted);">
-              Disaster response certification is earned separately from the degree &#8212; applied field
-              credentials that exist independent of academic timeline.
-            </div>
-          </div>
-        </div>
-
-        <div class="edu-coords">
-          44.5646&#176; N, 123.2620&#176; W &nbsp;&#183;&nbsp; Corvallis, Oregon
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact anchor -->
-    <div id="contact" style="height:0;overflow:hidden;" aria-hidden="true"></div>
-
-  </main>
-
-  <!-- ============================================================
-       FOOTER
-  ============================================================ -->
-  <footer role="contentinfo">
-    <div class="footer-inner">
-      <div class="status-wrap">
-        <div class="radar-ping" aria-hidden="true">
-          <div class="radar-dot"></div>
-          <div class="radar-wave"></div>
-          <div class="radar-wave"></div>
-          <div class="radar-wave"></div>
-        </div>
-        <span class="status-text">Status: Field Ready</span>
-      </div>
-
-      <div class="footer-links">
-        <a href="https://linkedin.com" target="_blank" rel="noopener noreferrer" class="footer-btn">
-          <i class="fa-brands fa-linkedin"></i> LinkedIn
-        </a>
-        <a href="mailto:inquiries@hamishcairns.com" class="footer-email">
-          inquiries@hamishcairns.com
-        </a>
-      </div>
-
-      <p class="footer-copy">&copy; 2038 H. Cairns</p>
-      <p class="footer-trail">2,650 mi &nbsp;&#183;&nbsp; Campo to Manning Park &nbsp;&#183;&nbsp; PCT</p>
-
-      <nav class="footer-nav" aria-label="Footer navigation">
-        <a href="about.html">About</a>
-        <a href="skills.html">Skills</a>
-        <a href="credentials.html">Credentials</a>
-        <a href="pct.html">PCT</a>
       </nav>
-    </div>
-  </footer>
+    </header>
 
-  <!-- ============================================================
-       JAVASCRIPT
-  ============================================================ -->
-  <script>
-    'use strict';
+    <!-- ── SEARCH ──────────────────────────────────────────────────────────── -->
+    <section class="search" aria-label="Search">
+      <div class="bar" role="search">
+        <div class="mode-badge" id="modeBadge" aria-live="polite" aria-label="Current mode">
+          <span class="dot" aria-hidden="true"></span>
+          <span id="modeLabel">GOOGLE</span>
+        </div>
+        <input
+          id="q"
+          type="search"
+          autocomplete="off"
+          spellcheck="false"
+          aria-label="Search or type a command"
+          placeholder="Search Google or type a command…  (try: claude)"
+        />
+      </div>
 
-    /* ----------------------------------------------------------
-       INTRO ANIMATION — Radar Pulse Reveal
-    ---------------------------------------------------------- */
-    (function () {
-      var overlay = document.getElementById('intro-overlay');
-      var drop    = document.getElementById('drop');
-      var ring1   = document.getElementById('ring1');
-      var ring2   = document.getElementById('ring2');
+      <div class="subrow" aria-hidden="true">
+        <span class="pill">
+          <kbd class="kbd">Enter</kbd> go &nbsp;·&nbsp; <kbd class="kbd">Esc</kbd> clear
+        </span>
+        <span class="pill">
+          Prefix <kbd class="kbd">!</kbd> to force Google search
+        </span>
+      </div>
+    </section>
 
-      setTimeout(function () {
-        drop.style.opacity = '0';
-        ring1.classList.add('pulse');
-        ring2.classList.add('pulse');
-      }, 900);
+    <!-- ── LINKS GRID ──────────────────────────────────────────────────────── -->
+    <section class="grid" aria-label="Links and daily quote">
 
-      setTimeout(function () {
-        overlay.classList.add('hide');
-        setTimeout(function () { overlay.remove(); }, 700);
-      }, 2100);
-    })();
+      <!-- AI Folder -->
+      <div class="card" role="region" aria-label="AI tools">
+        <h2>AI <span class="tag">folder</span></h2>
+        <div class="links">
+          <a class="link-item" href="https://claude.ai/" rel="noreferrer noopener" aria-label="Open Claude AI">
+            <span>
+              <span class="link-icon" aria-hidden="true">🤖</span>
+              Claude
+            </span>
+            <small>claude</small>
+          </a>
+          <a class="link-item" href="https://gemini.google.com/" rel="noreferrer noopener" aria-label="Open Gemini AI">
+            <span>
+              <span class="link-icon" aria-hidden="true">✨</span>
+              Gemini
+            </span>
+            <small>gemini</small>
+          </a>
+        </div>
+      </div>
 
-    /* ----------------------------------------------------------
-       THEME TOGGLE
-    ---------------------------------------------------------- */
-    (function () {
-      var html = document.documentElement;
-      var btn  = document.getElementById('theme-toggle');
-      var icon = document.getElementById('theme-icon');
+      <!-- Daily Quote -->
+      <div class="card quote-card" role="region" aria-label="Daily quote">
+        <h2>Daily note <span class="tag">random</span></h2>
+        <p id="quoteText">—</p>
+        <small id="quoteMeta">—</small>
+      </div>
 
-      btn.addEventListener('click', function () {
-        var isDark = html.getAttribute('data-theme') === 'dark';
-        if (isDark) {
-          html.setAttribute('data-theme', 'light');
-          icon.className = 'fa-solid fa-moon';
-        } else {
-          html.setAttribute('data-theme', 'dark');
-          icon.className = 'fa-solid fa-sun';
-        }
-      });
-    })();
+    </section>
 
-    /* ----------------------------------------------------------
-       HAMBURGER MENU
-    ---------------------------------------------------------- */
-    (function () {
-      var btn    = document.getElementById('hamburger');
-      var drawer = document.getElementById('mobile-drawer');
-      var links  = drawer.querySelectorAll('.mobile-link');
+    <footer class="page-footer" aria-label="Page footer">
+      ⛰ &nbsp; built for adventure &nbsp; ⛰
+    </footer>
+  </article>
+</div>
 
-      btn.addEventListener('click', function () {
-        var isOpen = drawer.classList.toggle('open');
-        btn.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
-      });
+<script>
+  /* ── Clock / Date ──────────────────────────────────────────────────────── */
+  function pad(n) { return String(n).padStart(2, '0'); }
 
-      links.forEach(function (link) {
-        link.addEventListener('click', function () {
-          drawer.classList.remove('open');
-          btn.setAttribute('aria-expanded', 'false');
-        });
-      });
-    })();
+  function tick() {
+    const now = new Date();
+    document.getElementById('clock').textContent =
+      pad(now.getHours()) + ':' + pad(now.getMinutes()) + ':' + pad(now.getSeconds());
+    document.getElementById('date').textContent = now.toLocaleDateString(undefined, {
+      weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+    });
+  }
+  tick();
+  setInterval(tick, 1000);
 
-    /* ----------------------------------------------------------
-       SCROLL-REVEAL (Intersection Observer)
-    ---------------------------------------------------------- */
-    (function () {
-      var els = document.querySelectorAll('.reveal');
-      if (!('IntersectionObserver' in window)) {
-        els.forEach(function (el) { el.classList.add('visible'); });
-        return;
-      }
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            e.target.classList.add('visible');
-            obs.unobserve(e.target);
-          }
-        });
-      }, { threshold: 0.10 });
-      els.forEach(function (el) { obs.observe(el); });
-    })();
+  /* ── Daily Quote (deterministic by local date, no API) ─────────────────── */
+  const QUOTES = [
+    { t: "The PCT isn't just a trail — it's a 2,650-mile argument for changing your life.",            a: "PCT aspiration" },
+    { t: "Small steps and a consistent pace. You're building a trail life one day at a time.",         a: "Long trail wisdom" },
+    { t: "Oregon: moss, basalt, big skies. Worth every blister to earn it.",                           a: "Future you" },
+    { t: "OSU goal: show up curious. Leave better than you arrived.",                                  a: "Campus intention" },
+    { t: "Keep it light — pack, plans, and worries alike.",                                            a: "UL philosophy" },
+    { t: "The map is not the hike. Start walking; adjust on the ridge.",                               a: "Field note" },
+    { t: "If it's worth doing, it's worth doing in weather.",                                          a: "Rugged reminder" },
+    { t: "Treat the next mile like it's the only mile.",                                               a: "Long trail trick" },
+    { t: "Make friends with boredom — it's where endurance lives.",                                   a: "Training note" },
+    { t: "The Cascades don't care about your excuses. They'll be there whenever you're ready.",        a: "Oregon mountains" },
+    { t: "Crater Lake blue is a colour that exists nowhere else. Go see it.",                         a: "Oregon bucket list" },
+    { t: "Thru-hiking teaches one thing above all: you are more capable than you believe.",           a: "PCT truth" },
+    { t: "Australia gave you grit. Oregon will give you scenery. The PCT will tie them together.",    a: "Personal manifesto" },
+    { t: "Corvallis is a good town to grow in. The Coast Range is right there.",                      a: "OSU life" },
+    { t: "Start before you're ready. The trail will finish the preparation.",                         a: "Hiker proverb" },
+    { t: "There is no bad weather, only inappropriate footwear.",                                     a: "Field axiom" },
+    { t: "Every sunrise on trail is earned by the miles of the day before.",                          a: "PCT sunrise" },
+    { t: "Northern terminus: Manning Park, BC. Three letters: PCT. One life-changing sentence.",      a: "Thru-hiker dream" },
+    { t: "Oregon State: where the beavers study hard and the mountains wait at the weekend.",         a: "OSU campus life" },
+    { t: "The best gear is the gear you trust enough to forget you're carrying.",                     a: "UL gospel" },
+  ];
 
-    /* ----------------------------------------------------------
-       COORDINATES EASTER EGG — Trail Magic
-    ---------------------------------------------------------- */
-    (function () {
-      var btn       = document.getElementById('coord-btn');
-      var coordText = document.getElementById('coord-text');
-      var magic     = document.getElementById('trail-magic');
-      var timer     = null;
+  function daySeed(d) {
+    return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+  }
+  function hashStr(s) {
+    let h = 2166136261;
+    for (let i = 0; i < s.length; i++) {
+      h ^= s.charCodeAt(i);
+      h = Math.imul(h, 16777619);
+    }
+    return h >>> 0;
+  }
+  (function setDailyQuote() {
+    const seed = daySeed(new Date());
+    const q    = QUOTES[hashStr(seed) % QUOTES.length];
+    document.getElementById('quoteText').textContent = '\u201c' + q.t + '\u201d';
+    document.getElementById('quoteMeta').textContent = '— ' + q.a + ' \u00b7 ' + seed;
+  })();
 
-      btn.addEventListener('click', function () {
-        if (timer) return;
-        coordText.style.display = 'none';
-        magic.style.display     = 'inline';
-        timer = setTimeout(function () {
-          magic.style.display     = 'none';
-          coordText.style.display = 'inline';
-          timer = null;
-        }, 1800);
-      });
-    })();
+  /* ── Search + Mini Command Palette ─────────────────────────────────────── */
+  const COMMANDS = [
+    { key: 'claude',  url: 'https://claude.ai/' },
+    { key: 'gemini',  url: 'https://gemini.google.com/' },
+    { key: 'pcta',    url: 'https://www.pcta.org/' },
+    { key: 'osu',     url: 'https://oregonstate.edu/' },
+  ];
 
-    /* ----------------------------------------------------------
-       3D TILT EFFECT on Skill Cards
-    ---------------------------------------------------------- */
-    (function () {
-      var cards = document.querySelectorAll('[data-tilt]');
-      cards.forEach(function (card) {
-        card.addEventListener('mousemove', function (e) {
-          var rect  = card.getBoundingClientRect();
-          var x = (e.clientX - rect.left) / rect.width  - 0.5;
-          var y = (e.clientY - rect.top)  / rect.height - 0.5;
-          card.style.transform = 'perspective(600px) rotateX(' + (-(y * 10)) + 'deg) rotateY(' + (x * 10) + 'deg) scale3d(1.02,1.02,1.02)';
-        });
-        card.addEventListener('mouseleave', function () {
-          card.style.transform = 'perspective(600px) rotateX(0deg) rotateY(0deg) scale3d(1,1,1)';
-        });
-      });
-    })();
+  const inputEl    = document.getElementById('q');
+  const modeBadge  = document.getElementById('modeBadge');
+  const modeLabel  = document.getElementById('modeLabel');
 
-    /* ----------------------------------------------------------
-       TRUCK EASTER EGG — Scroll Reveal
-    ---------------------------------------------------------- */
-    (function () {
-      var truck = document.getElementById('truck-easter-egg');
-      if (!truck || !('IntersectionObserver' in window)) return;
+  function getCmd(raw) {
+    const trimmed = raw.trim().toLowerCase();
+    if (!trimmed || trimmed.startsWith('!')) return null;
+    const first = trimmed.split(/\s+/)[0];
+    return COMMANDS.find(c => c.key === first) || null;
+  }
 
-      var obs = new IntersectionObserver(function (entries) {
-        entries.forEach(function (e) {
-          if (e.isIntersecting) {
-            truck.classList.add('in-view');
-          } else {
-            truck.classList.remove('in-view');
-          }
-        });
-      }, { threshold: 0.3 });
-      obs.observe(truck);
-    })();
-  </script>
+  function updateMode() {
+    const cmd = getCmd(inputEl.value);
+    if (cmd) {
+      modeLabel.textContent = cmd.key.toUpperCase();
+      modeBadge.classList.add('cmd-mode');
+    } else {
+      modeLabel.textContent = 'GOOGLE';
+      modeBadge.classList.remove('cmd-mode');
+    }
+  }
+
+  function go() {
+    const raw = inputEl.value;
+    const q   = raw.trim();
+    if (!q) return;
+
+    // Force Google search with "!" prefix
+    if (q.startsWith('!')) {
+      const query = q.slice(1).trim();
+      if (query) location.href = 'https://www.google.com/search?q=' + encodeURIComponent(query);
+      return;
+    }
+
+    // Command match
+    const cmd = getCmd(q);
+    if (cmd) { location.href = cmd.url; return; }
+
+    // Default: Google search
+    location.href = 'https://www.google.com/search?q=' + encodeURIComponent(q);
+  }
+
+  inputEl.addEventListener('input', updateMode);
+  inputEl.addEventListener('keydown', function(e) {
+    if (e.key === 'Enter')  { e.preventDefault(); go(); }
+    if (e.key === 'Escape') { inputEl.value = ''; updateMode(); }
+  });
+
+  // Clicking a cmd-chip fills the input and focuses
+  document.querySelectorAll('.cmd-chip').forEach(function(chip) {
+    const label = chip.textContent.trim();
+    if (label === '!query') return;
+    chip.style.cursor = 'pointer';
+    chip.addEventListener('click', function() {
+      inputEl.value = label;
+      inputEl.focus();
+      updateMode();
+    });
+  });
+
+  // Autofocus on load
+  window.addEventListener('load', function() {
+    inputEl.focus();
+  });
+</script>
 </body>
 </html>
